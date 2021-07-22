@@ -1,39 +1,43 @@
 package com.luzhajka.tasktracker.controller;
 
-import com.luzhajka.tasktracker.controller.dto.UserDTO;
+import com.luzhajka.tasktracker.controller.dto.EditUserRequestDto;
+import com.luzhajka.tasktracker.controller.dto.UserDto;
 import com.luzhajka.tasktracker.controller.dto.UserRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
-@Tag(name = "Управление пользователями")
-@RequestMapping("/api/usersManager")
+@Tag(name = "Управление")
 @RestController
 public class UserController {
 
 
     @Operation(summary = "получить пользователя по ID")
-    @GetMapping(value = "/user/{userID}")
-    public UserDTO getUser(@RequestHeader("requester") String requester,
-                           @PathVariable("userID") String userID) {
+    @GetMapping(value = "/user/{id}")
+    public UserDto getUser(@PathVariable("id") String userID) {
         //заглушка. Вернуть пользователя по userId
-        return new UserDTO(122L, "Вася", UserRole.developer);
+        return new UserDto(122L, "Вася", UserRole.developer);
     }
 
-    @Operation(summary = "получить список пользователей по роли")
+    @Operation(summary = "получить список пользователей")
     @GetMapping(value = "/user/role")
-    public List<UserDTO> getUsers(@RequestHeader("requester") String requester,
-                                  @RequestParam(name = "userRole", required = false) String userRole) {
-        //заглушка. Фильтруем по параметрам if (параметр != null), если все null - возвращаем userList со всеми пользователями
-        List<UserDTO> userList = List.of();
+    public List<UserDto> getUsers() {
+        List<UserDto> userList = List.of();
         return userList;
     }
 
     @Operation(summary = "добавить пользователя")
     @PostMapping(value = "/user")
-    public Long postUser(@RequestHeader("requester") String requester,
-                         @RequestBody UserDTO userDTO) {
+    public Long postUser(@RequestBody UserDto userDTO) {
         //createUserDTO в БД
         //БД присвоит userID
         Long userID = 33L;
@@ -42,17 +46,14 @@ public class UserController {
     }
 
     @Operation(summary = "изменить имя пользователя или роль пользователя")
-    @PutMapping(value = "/user/{userID}")
-    public void editUser(@RequestHeader("requester") String requester,
-                         @PathVariable("userID") String userID,
-                         @RequestParam(name = "userName") String userName,
-                         @RequestParam(name = "userRole") String userRole) {
+    @PutMapping(value = "/user/{id}")
+    public void editUser(@PathVariable("id") String userID,
+                         @RequestBody EditUserRequestDto editUserRequestDto) {
     }
 
     @Operation(summary = "удалить пользователя")
-    @DeleteMapping(value = "/user/{userID}")
-    public void deleteUser(@RequestHeader("requester") String requester,
-                           @PathVariable("userID") Long id) {
+    @DeleteMapping(value = "/user/{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
         // проверить роль запрашивающего на право удаления пользователя
         // удаление сущности из БД
     }

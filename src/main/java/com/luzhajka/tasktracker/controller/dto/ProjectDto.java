@@ -2,7 +2,11 @@ package com.luzhajka.tasktracker.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class CreateProjectDTO {
+public class ProjectDto {
+
+    @Schema(description = "ID проекта")
+    Long projectId;
+
     @Schema(description = "Название проекта")
     String projectName;
 
@@ -12,10 +16,19 @@ public class CreateProjectDTO {
     @Schema(description = "Статус проекта")
     ProjectStatus status;
 
-    public CreateProjectDTO(String projectName, String client, ProjectStatus status) {
+    public ProjectDto(Long projectId, String projectName, String client, ProjectStatus status) {
+        this.projectId = projectId;
         this.projectName = projectName;
         this.client = client;
         this.status = status;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getProjectName() {

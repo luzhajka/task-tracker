@@ -2,10 +2,7 @@ package com.luzhajka.tasktracker.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class UserDTO {
-
-    @Schema(description = "ID пользователя")
-    Long userId;
+public class CreateUserDto {
 
     @Schema(description = "Имя пользователя")
     String name;
@@ -13,18 +10,10 @@ public class UserDTO {
     @Schema(description = "Роль пользователя")
     UserRole role;
 
-    public UserDTO(Long userId, String name, UserRole role) {
-        this.userId = userId;
+    public CreateUserDto(String name, UserRole role) {
+
         this.name = name;
         this.role = role;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getName() {
@@ -42,6 +31,5 @@ public class UserDTO {
     public void setRole(UserRole role) {
         this.role = role;
     }
-
 }
 

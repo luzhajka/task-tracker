@@ -2,13 +2,10 @@ package com.luzhajka.tasktracker.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
 import java.time.LocalDate;
-import java.util.Date;
 
-public class ReleaseDTO {
-    @Schema(description = "ID релиза")
-    private Long releaseId;
-
+public class CreateReleaseDto {
     @Schema(description = "Версия релиза")
     private String version;
 
@@ -19,56 +16,47 @@ public class ReleaseDTO {
     private LocalDate endRelease;
 
     @Schema(description = "Проект, которому принадлежит релиз")
-    private ProjectDTO project;
+    private ProjectDto project;
 
-    public ReleaseDTO(Long releaseId, String version, LocalDate startRelease, LocalDate endRelease, ProjectDTO project) {
-        this.releaseId = releaseId;
+    public CreateReleaseDto(String version, LocalDate startRelease, LocalDate endRelease, ProjectDto project) {
         this.version = version;
         this.startRelease = startRelease;
         this.endRelease = endRelease;
         this.project = project;
     }
 
-    public static class ReleaseDtoBuilder{
-        private Long releaseId;
+    public static class CreateReleaseDtoBuilder {
         private String version;
         private LocalDate startRelease;
         private LocalDate endRelease;
-        private ProjectDTO project;
+        private ProjectDto project;
 
-        public ReleaseDtoBuilder releaseId(Long releaseId){
-            this.releaseId = releaseId;
-            return this;
-        }
 
-        public ReleaseDtoBuilder version(String version){
+        public CreateReleaseDtoBuilder version(String version) {
             this.version = version;
             return this;
         }
 
-        public ReleaseDtoBuilder startRelease(LocalDate startRelease){
+        public CreateReleaseDtoBuilder startRelease(LocalDate startRelease) {
             this.startRelease = startRelease;
             return this;
         }
 
-        public ReleaseDtoBuilder endRelease(LocalDate endRelease){
+        public CreateReleaseDtoBuilder endRelease(LocalDate endRelease) {
             this.endRelease = endRelease;
             return this;
         }
 
-        private ReleaseDtoBuilder project(ProjectDTO project){
+        private CreateReleaseDtoBuilder project(ProjectDto project) {
             this.project = project;
             return this;
         }
 
-        public ReleaseDTO build (){
-            return new ReleaseDTO (releaseId, version, startRelease, endRelease, project);
+        public CreateReleaseDto build() {
+            return new CreateReleaseDto(version, startRelease, endRelease, project);
         }
     }
 
-    public Long getReleaseId() {
-        return releaseId;
-    }
 
     public String getVersion() {
         return version;
@@ -82,12 +70,8 @@ public class ReleaseDTO {
         return endRelease;
     }
 
-    public ProjectDTO getProject() {
+    public ProjectDto getProject() {
         return project;
-    }
-
-    public void setReleaseId(Long releaseId) {
-        this.releaseId = releaseId;
     }
 
     public void setVersion(String version) {
@@ -102,7 +86,8 @@ public class ReleaseDTO {
         this.endRelease = endRelease;
     }
 
-    public void setProject(ProjectDTO project) {
+    public void setProject(ProjectDto project) {
         this.project = project;
     }
+
 }

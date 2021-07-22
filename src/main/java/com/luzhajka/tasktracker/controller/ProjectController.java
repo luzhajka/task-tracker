@@ -1,63 +1,44 @@
 package com.luzhajka.tasktracker.controller;
 
-import com.luzhajka.tasktracker.controller.dto.CreateProjectDTO;
-import com.luzhajka.tasktracker.controller.dto.ProjectDTO;
+import com.luzhajka.tasktracker.controller.dto.CreateProjectDto;
+import com.luzhajka.tasktracker.controller.dto.EditProjectRequestDto;
+import com.luzhajka.tasktracker.controller.dto.ProjectDto;
 import com.luzhajka.tasktracker.controller.dto.ProjectStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
-
-@Tag(name = "Управление проектами")
-@RequestMapping("/api/projectManager")
+@Tag(name = "Управление")
 @RestController
 public class ProjectController {
 
     @Operation(summary = "получить проект по ID")
-    @GetMapping(value = "/project/{projectId}")
-    public ProjectDTO getProject(@RequestHeader("requester") String requester,
-                                 @PathVariable("projectId") String projectId) {
+    @GetMapping(value = "/project/{id}")
+    public ProjectDto getProject(@PathVariable("id") String projectId) {
         //заглушка. Вернуть проект по projectId
-        return new ProjectDTO(13L, "проект1", "Mike", ProjectStatus.DONE);
-    }
-
-    @Operation(summary = "получить список проектов по заказчику или по статусу")
-    @GetMapping(value = "/projects")
-    public List<ProjectDTO> getProjects(@RequestHeader("requester") String requester,
-                                        @RequestParam(name = "client-id", required = false) Long clientID,
-                                        @RequestParam(name = "status", required = false) String status) {
-        //заглушка. Фильтруем по параметрам if (параметр != null), если все null - возвращаем tasksList со всеми проектами
-        List<ProjectDTO> projectList = List.of();
-        return projectList;
+        return new ProjectDto(13L, "проект1", "Mike", ProjectStatus.DONE);
     }
 
 
     @Operation(summary = "создать проект")
     @PostMapping(value = "/project")
-    public Long postProject(@RequestHeader("requester") String requester,
-                            @RequestBody CreateProjectDTO createProjectDTO) {
+    public java.lang.Long postProject(@RequestBody CreateProjectDto createProjectDTO) {
         //createProjectDTO в БД
         //БД присвоит projectID
-        Long projectID = 11L;
+        java.lang.Long projectID = 11L;
         return projectID;
     }
 
     @Operation(summary = "изменить название проекта и заказчика")
-    @PutMapping(value = "/project/{projectId}")
-    public void editProject(@RequestHeader("requester") String requester,
-                            @PathVariable("projectId") String projectId,
-                            @RequestParam(name = "projectName") String projectName,
-                            @RequestParam(name = "client") String clientName) {
+    @PutMapping(value = "/project/{id}")
+    public void editProject(@PathVariable("id") String projectId,
+                            @RequestBody EditProjectRequestDto editProjectRequestDto) {
 
-    }
-
-    @Operation(summary = "изменить статус проекта")
-    @PutMapping(value = "/project/{projectId}/status/{statusProject}")
-    public void changeProjectStatus(@RequestHeader("requester") String requester,
-                                    @PathVariable(name = "projectId") Long projectId,
-                                    @PathVariable(name = "statusProject") String statusProject) {
-        //изменить статус проекта
     }
 }

@@ -2,9 +2,11 @@ package com.luzhajka.tasktracker.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class TaskDTO {
+import java.util.UUID;
+
+public class TaskDto {
     @Schema(description = "ID задачи")
-    private Long taskId;
+    private UUID taskId;
 
     @Schema(description = "Название задачи")
     private String name;
@@ -13,10 +15,10 @@ public class TaskDTO {
     private String description;
 
     @Schema(description = "Автор задачи")
-    private UserDTO author;
+    private Long author;
 
     @Schema(description = "Исполнитель задачи")
-    private UserDTO executor;
+    private Long executor;
 
     @Schema(description = "Статус задачи")
     private TaskStatus status;
@@ -25,9 +27,9 @@ public class TaskDTO {
     private Integer release;
 
     @Schema(description = "Проект, которому принадлежит задача")
-    private ProjectDTO project;
+    private Long project;
 
-    public TaskDTO(Long taskId, String name, String description, UserDTO author, UserDTO executor, TaskStatus status, Integer release, ProjectDTO project) {
+    public TaskDto(UUID taskId, String name, String description, Long author, Long executor, TaskStatus status, Integer release, Long project) {
         this.taskId = taskId;
         this.name = name;
         this.description = description;
@@ -39,16 +41,16 @@ public class TaskDTO {
     }
 
     public static class TaskDTOBuilder {
-        private Long taskId;
+        private UUID taskId;
         private String name;
         private String description;
-        private UserDTO author;
-        private UserDTO executor;
+        private Long author;
+        private Long executor;
         private TaskStatus status;
         private Integer release;
-        private ProjectDTO project;
+        private Long project;
 
-        public TaskDTOBuilder taskId(Long taskId) {
+        public TaskDTOBuilder taskId(UUID taskId) {
             this.taskId = taskId;
             return this;
         }
@@ -63,12 +65,12 @@ public class TaskDTO {
             return this;
         }
 
-        public TaskDTOBuilder author(UserDTO author) {
+        public TaskDTOBuilder author(Long author) {
             this.author = author;
             return this;
         }
 
-        public TaskDTOBuilder executor(UserDTO executor) {
+        public TaskDTOBuilder executor(Long executor) {
             this.executor = executor;
             return this;
         }
@@ -83,18 +85,18 @@ public class TaskDTO {
             return this;
         }
 
-        public TaskDTOBuilder project(ProjectDTO project) {
+        public TaskDTOBuilder project(Long project) {
             this.project = project;
             return this;
         }
 
-        public TaskDTO build() {
-            return new TaskDTO(taskId, name, description, author, executor, status, release, project);
+        public TaskDto build() {
+            return new TaskDto(taskId, name, description, author, executor, status, release, project);
         }
     }
 
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
@@ -106,11 +108,11 @@ public class TaskDTO {
         return description;
     }
 
-    public UserDTO getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public UserDTO getExecutor() {
+    public Long getExecutor() {
         return executor;
     }
 
@@ -122,12 +124,12 @@ public class TaskDTO {
         return release;
     }
 
-    public ProjectDTO getProject() {
+    public Long getProject() {
         return project;
     }
 
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 
@@ -139,11 +141,11 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public void setAuthor(UserDTO author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 
-    public void setExecutor(UserDTO executor) {
+    public void setExecutor(Long executor) {
         this.executor = executor;
     }
 
@@ -155,7 +157,7 @@ public class TaskDTO {
         this.release = release;
     }
 
-    public void setProject(ProjectDTO project) {
+    public void setProject(Long project) {
         this.project = project;
     }
 
