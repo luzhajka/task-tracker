@@ -1,17 +1,17 @@
 package com.luzhajka.tasktracker.controller.dto;
 
 public class GetReleasesRequestDto {
-    Long projectID;
+    Long projectId;
 
-    public GetReleasesRequestDto(Long projectID) {
-        this.projectID = projectID;
+    public GetReleasesRequestDto(Long projectId) {
+        this.projectId = projectId;
     }
 
-    public Long getProjectID() {
-        return projectID;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setProjectID(Long projectID) {
-        this.projectID = projectID;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

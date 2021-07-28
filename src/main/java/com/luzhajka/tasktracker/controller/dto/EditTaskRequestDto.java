@@ -4,15 +4,15 @@ public class EditTaskRequestDto {
     String name;
     String description;
     String statusTask;
-    Long executorID;
-    Long releaseID;
+    Long executorId;
+    Long releaseId;
 
-    public EditTaskRequestDto(String name, String description, String statusTask, Long executorID, Long releaseID) {
+    public EditTaskRequestDto(String name, String description, String statusTask, Long executorId, Long releaseId) {
         this.name = name;
         this.description = description;
         this.statusTask = statusTask;
-        this.executorID = executorID;
-        this.releaseID = releaseID;
+        this.executorId = executorId;
+        this.releaseId = releaseId;
     }
 
     public String getName() {
@@ -39,19 +39,19 @@ public class EditTaskRequestDto {
         this.statusTask = statusTask;
     }
 
-    public Long getExecutorID() {
-        return executorID;
+    public Long getExecutorId() {
+        return executorId;
     }
 
-    public void setExecutorID(Long executorID) {
-        this.executorID = executorID;
+    public void setExecutorId(Long executorId) {
+        this.executorId = executorId;
     }
 
-    public Long getReleaseID() {
-        return releaseID;
+    public Long getReleaseId() {
+        return releaseId;
     }
 
-    public void setReleaseID(Long releaseID) {
-        this.releaseID = releaseID;
+    public void setReleaseId(Long releaseId) {
+        this.releaseId = releaseId;
     }
 }

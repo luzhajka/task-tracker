@@ -5,6 +5,7 @@ import com.luzhajka.tasktracker.controller.dto.CreateReleaseDto;
 import com.luzhajka.tasktracker.controller.dto.EditReleaseRequestDto;
 import com.luzhajka.tasktracker.controller.dto.GetReleasesRequestDto;
 import com.luzhajka.tasktracker.controller.dto.ReleaseDto;
+import com.luzhajka.tasktracker.service.ReleaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +15,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "Управление")
-@RestController
+@RestController(value = "${server.api-base-url}")
 public class ReleaseController {
+    final ReleaseService releaseService;
+
+    public ReleaseController(ReleaseService releaseService) {
+        this.releaseService = releaseService;
+    }
 
 
     @Operation(summary = "получить релиз по ID")
     @GetMapping(value = "/release/{id}")
-    public ReleaseDto getRelease(@PathVariable("id") String releaseID) {
-        //заглушка. Вернуть релиз по releaseID
-        return new ReleaseDto(122L, "2.2", LocalDate.now(), LocalDate.now().plusDays(7L), 23L);
+    public ReleaseDto getRelease(@PathVariable("id") Long releaseId) {
+        return releaseService.getRelease(releaseId);
     }
 
     @Operation(summary = "получить список релизов проекта")
@@ -42,13 +46,13 @@ public class ReleaseController {
     public Long postRelease(@RequestBody CreateReleaseDto createReleaseDTO) {
         //createReleaseDTO в БД
         //БД присвоит releaseID
-        Long releaseID = 44L;
-        return releaseID;
+        Long releaseId = 44L;
+        return releaseId;
     }
 
     @Operation(summary = "изменить версию или сроки релиза")
     @PutMapping(value = "/release/{id}")
-    public void editRelease(@PathVariable("id") String releaseID,
+    public void editRelease(@PathVariable("id") Long releaseId,
                             @RequestBody EditReleaseRequestDto editReleaseRequestDto) {
     }
 }

@@ -24,12 +24,12 @@ public class TaskDto {
     private TaskStatus status;
 
     @Schema(description = "Релиз, на который объявлена задача")
-    private Integer release;
+    private Long release;
 
     @Schema(description = "Проект, которому принадлежит задача")
     private Long project;
 
-    public TaskDto(UUID taskId, String name, String description, Long author, Long executor, TaskStatus status, Integer release, Long project) {
+    public TaskDto(UUID taskId, String name, String description, Long author, Long executor, TaskStatus status, Long release, Long project) {
         this.taskId = taskId;
         this.name = name;
         this.description = description;
@@ -47,7 +47,7 @@ public class TaskDto {
         private Long author;
         private Long executor;
         private TaskStatus status;
-        private Integer release;
+        private Long release;
         private Long project;
 
         public TaskDTOBuilder taskId(UUID taskId) {
@@ -80,7 +80,7 @@ public class TaskDto {
             return this;
         }
 
-        public TaskDTOBuilder release(Integer release) {
+        public TaskDTOBuilder release(Long release) {
             this.release = release;
             return this;
         }
@@ -120,7 +120,7 @@ public class TaskDto {
         return status;
     }
 
-    public Integer getRelease() {
+    public Long getRelease() {
         return release;
     }
 
@@ -153,7 +153,7 @@ public class TaskDto {
         this.status = status;
     }
 
-    public void setRelease(Integer release) {
+    public void setRelease(Long release) {
         this.release = release;
     }
 

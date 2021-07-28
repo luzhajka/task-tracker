@@ -3,7 +3,7 @@ package com.luzhajka.tasktracker.controller;
 import com.luzhajka.tasktracker.controller.dto.CreateProjectDto;
 import com.luzhajka.tasktracker.controller.dto.EditProjectRequestDto;
 import com.luzhajka.tasktracker.controller.dto.ProjectDto;
-import com.luzhajka.tasktracker.controller.dto.ProjectStatus;
+import com.luzhajka.tasktracker.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,29 +15,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "Управление")
-@RestController
+@RestController(value = "${server.api-base-url}")
 public class ProjectController {
+
+    final ProjectService projectService;
+
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @Operation(summary = "получить проект по ID")
     @GetMapping(value = "/project/{id}")
-    public ProjectDto getProject(@PathVariable("id") String projectId) {
-        //заглушка. Вернуть проект по projectId
-        return new ProjectDto(13L, "проект1", "Mike", ProjectStatus.DONE);
+    public ProjectDto getProject(@PathVariable("id") Long projectId) {
+        return projectService.getProject(projectId);
     }
 
 
     @Operation(summary = "создать проект")
     @PostMapping(value = "/project")
-    public java.lang.Long postProject(@RequestBody CreateProjectDto createProjectDTO) {
-        //createProjectDTO в БД
-        //БД присвоит projectID
-        java.lang.Long projectID = 11L;
-        return projectID;
+    public Long postProject(@RequestBody CreateProjectDto createProjectDTO) {
+
+        return null;
     }
 
     @Operation(summary = "изменить название проекта и заказчика")
     @PutMapping(value = "/project/{id}")
-    public void editProject(@PathVariable("id") String projectId,
+    public void editProject(@PathVariable("id") Long projectId,
                             @RequestBody EditProjectRequestDto editProjectRequestDto) {
 
     }

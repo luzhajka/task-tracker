@@ -4,13 +4,13 @@ public class TaskFilterRequestDto {
 
     Long releaseId;
     Long authorId;
-    Long executorID;
+    Long executorId;
     String status;
 
-    public TaskFilterRequestDto(Long releaseId, Long authorId, Long executorID, String status) {
+    public TaskFilterRequestDto(Long releaseId, Long authorId, Long executorId, String status) {
         this.releaseId = releaseId;
         this.authorId = authorId;
-        this.executorID = executorID;
+        this.executorId = executorId;
         this.status = status;
     }
 
@@ -30,12 +30,12 @@ public class TaskFilterRequestDto {
         this.authorId = authorId;
     }
 
-    public Long getExecutorID() {
-        return executorID;
+    public Long getExecutorId() {
+        return executorId;
     }
 
-    public void setExecutorID(Long executorID) {
-        this.executorID = executorID;
+    public void setExecutorId(Long executorId) {
+        this.executorId = executorId;
     }
 
     public String getStatus() {
