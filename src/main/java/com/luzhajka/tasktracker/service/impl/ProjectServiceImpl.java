@@ -3,7 +3,6 @@ package com.luzhajka.tasktracker.service.impl;
 import com.luzhajka.tasktracker.controller.dto.CreateProjectDto;
 import com.luzhajka.tasktracker.controller.dto.EditProjectRequestDto;
 import com.luzhajka.tasktracker.controller.dto.ProjectDto;
-import com.luzhajka.tasktracker.entity.ProjectEntity;
 import com.luzhajka.tasktracker.exceptions.EntityNotFoundExceptions;
 import com.luzhajka.tasktracker.repository.ProjectRepository;
 import com.luzhajka.tasktracker.service.ProjectService;
@@ -11,12 +10,12 @@ import com.luzhajka.tasktracker.utils.ProjectDtoEntityMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import static java.lang.String.format;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
-    final ProjectRepository projectRepository;
-    final ProjectDtoEntityMapper mapper;
+    private final ProjectRepository projectRepository;
+    private final ProjectDtoEntityMapper mapper;
 
     public ProjectServiceImpl(ProjectRepository projectRepository, ProjectDtoEntityMapper mapper) {
         this.projectRepository = projectRepository;
@@ -26,13 +25,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public ProjectDto getProject(Long projectId) {
-        Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
-        if (projectOptional.isEmpty()){
-            throw new EntityNotFoundExceptions ("Project by id = " + projectId + " not found");
-        }
-        ProjectEntity projectEntity = projectOptional.get();
-
-        return mapper.entityToDto(projectEntity);
+        return projectRepository.findById(projectId)
+                .map(mapper::entityToDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundExceptions(format("Project by id = %s not found", projectId))
+                );
     }
 
     @Transactional

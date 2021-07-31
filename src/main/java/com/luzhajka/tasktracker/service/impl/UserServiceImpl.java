@@ -2,7 +2,6 @@ package com.luzhajka.tasktracker.service.impl;
 
 import com.luzhajka.tasktracker.controller.dto.EditUserRequestDto;
 import com.luzhajka.tasktracker.controller.dto.UserDto;
-import com.luzhajka.tasktracker.entity.UserEntity;
 import com.luzhajka.tasktracker.repository.UserRepository;
 import com.luzhajka.tasktracker.service.UserService;
 import com.luzhajka.tasktracker.utils.UserDtoEntityMapper;
@@ -11,12 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
+
+import static java.lang.String.format;
 
 @Service
 public class UserServiceImpl implements UserService {
-    final UserRepository userRepository;
-    final UserDtoEntityMapper mapper;
+    private final UserRepository userRepository;
+    private final UserDtoEntityMapper mapper;
 
     public UserServiceImpl(UserRepository userRepository, UserDtoEntityMapper mapper) {
         this.userRepository = userRepository;
@@ -27,12 +27,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto getUser(Long userId) {
-        Optional<UserEntity> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException("User by ID = " + userId + " not found");
-        }
-        UserEntity userEntity = userOptional.get();
-        return mapper.entityToDto(userEntity);
+        return userRepository.findById(userId)
+                .map(mapper::entityToDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(format("User by ID = %s not found", userId))
+                );
     }
 
     @Transactional

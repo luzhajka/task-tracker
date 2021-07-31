@@ -12,15 +12,17 @@ import com.luzhajka.tasktracker.utils.TaskDtoEntityMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class TaskServiceImpl implements TaskService {
-    final TaskRepository taskRepository;
-    final TaskDtoEntityMapper mapper;
+    private final TaskRepository taskRepository;
+    private final TaskDtoEntityMapper mapper;
 
     public TaskServiceImpl(TaskRepository taskRepository, TaskDtoEntityMapper mapper) {
         this.taskRepository = taskRepository;
@@ -30,23 +32,21 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public TaskDto getTaskById(String taskId) {
-        Optional<TaskEntity> taskOptional = taskRepository.findById(UUID.fromString(taskId));
-        if (taskOptional.isEmpty()) {
-            throw new EntityNotFoundExceptions("Task by id = " + taskId + " not found");
-        }
-        TaskEntity taskEntity = taskOptional.get();
-        return mapper.entityToDto(taskEntity);
+        return taskRepository.findById(UUID.fromString(taskId))
+                .map(mapper::entityToDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundExceptions(format("Task by id = %s not found", taskId))
+                );
     }
 
     @Transactional
     @Override
     public List<TaskDto> getTasksByParameter(TaskFilterRequestDto taskFilterRequestDto) {
-
         Long releaseId = taskFilterRequestDto.getReleaseId();
         Long authorId = taskFilterRequestDto.getAuthorId();
         Long executorId = taskFilterRequestDto.getExecutorId();
         String status = taskFilterRequestDto.getStatus();
-        List<TaskDto> taskDtoList = new ArrayList<>();
+
         List<TaskEntity> taskEntityList;
         Optional<List<TaskEntity>> optionalTaskList;
 
@@ -55,49 +55,41 @@ public class TaskServiceImpl implements TaskService {
             taskEntityList = taskRepository.findAll();
         } else if (releaseId == null && authorId == null && executorId == null) {
             optionalTaskList = taskRepository.findAllByStatus(status);
-            if (optionalTaskList.isEmpty()) {
-                throw new EntityNotFoundExceptions("Tasks by this status = " + status + " not found");
-            }
-            taskEntityList = optionalTaskList.get();
+            taskEntityList = optionalTaskList.orElseThrow(
+                    () -> new EntityNotFoundExceptions(format("Tasks by this status = %s not found", status))
+            );
+
         } else if (releaseId == null && authorId == null && status == null) {
             optionalTaskList = taskRepository.findAllByExecutorId(executorId);
-            if (optionalTaskList.isEmpty()) {
-                throw new EntityNotFoundExceptions("Tasks by this executor = " + executorId + " not found");
-            }
-            taskEntityList = optionalTaskList.get();
+            taskEntityList = optionalTaskList.orElseThrow(
+                    () -> new EntityNotFoundExceptions(format("Tasks by this executor = %s not found", executorId))
+            );
+
+
         } else if (releaseId == null && executorId == null && status == null) {
             optionalTaskList = taskRepository.findAllByAuthorId(authorId);
-            if (optionalTaskList.isEmpty()) {
-                throw new EntityNotFoundExceptions("Tasks by this author = " + authorId + " not found");
-            }
-            taskEntityList = optionalTaskList.get();
+            taskEntityList = optionalTaskList.orElseThrow(
+                    () -> new EntityNotFoundExceptions(format("Tasks by this author = %s not found", authorId))
+            );
+
         } else if (authorId == null && executorId == null && status == null) {
             optionalTaskList = taskRepository.findAllByRelease(releaseId);
-            if (optionalTaskList.isEmpty()) {
-                throw new EntityNotFoundExceptions("Tasks by this release = " + releaseId + " not found");
-            }
-            taskEntityList = optionalTaskList.get();
+            taskEntityList = optionalTaskList.orElseThrow(() -> new EntityNotFoundExceptions(
+                    format("Tasks by this release = %s not found", releaseId))
+            );
+
         } else {
-            optionalTaskList = taskRepository.findAllByReleaseIdAndExecutorIdAndStatus(
-                    releaseId,
-                    executorId,
-                    status);
-            if (optionalTaskList.isEmpty()) {
-                throw new EntityNotFoundExceptions("Tasks by this release = " + releaseId
-                        + " executor = " + executorId
-                        + " status = " + status
-                        + " not found");
-            }
-
-            taskEntityList = optionalTaskList.get();
+            optionalTaskList = taskRepository.findAllByReleaseIdAndExecutorIdAndStatus(releaseId, executorId, status);
+            taskEntityList = optionalTaskList.orElseThrow(
+                    () -> new EntityNotFoundExceptions(
+                            format("Tasks by this release = %s executor %s status = %s not found", releaseId, executorId, status)
+                    )
+            );
         }
 
-        for (TaskEntity entity : taskEntityList) {
-            TaskDto taskDto = mapper.entityToDto(entity);
-            taskDtoList.add(taskDto);
-        }
-
-        return taskDtoList;
+        return taskEntityList.stream()
+                .map(mapper::entityToDto)
+                .collect(toList());
     }
 
     @Transactional

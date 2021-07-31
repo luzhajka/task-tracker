@@ -10,15 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ErrorController {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(Exception e) {
-
-        if (e instanceof EntityNotFoundExceptions) {
+    @ExceptionHandler(EntityNotFoundExceptions.class)
+    public ResponseEntity handleException(EntityNotFoundExceptions e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
 }

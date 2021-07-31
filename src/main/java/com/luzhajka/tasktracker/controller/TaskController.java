@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Управление")
-@RestController(value = "${server.api-base-url}")
+@RestController("${server.api-base-url}")
 public class TaskController {
     final TaskService taskService;
 

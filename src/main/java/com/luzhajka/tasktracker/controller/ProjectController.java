@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "Управление")
-@RestController(value = "${server.api-base-url}")
+@RestController("${server.api-base-url}")
 public class ProjectController {
 
     final ProjectService projectService;
