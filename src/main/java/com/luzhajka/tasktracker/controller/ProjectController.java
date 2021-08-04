@@ -33,15 +33,24 @@ public class ProjectController {
 
     @Operation(summary = "создать проект")
     @PostMapping(value = "/project")
-    public Long postProject(@RequestBody CreateProjectDto createProjectDTO) {
-
-        return null;
+    public Long createProject(@RequestBody CreateProjectDto createProjectDTO) {
+        return projectService.createProject(createProjectDTO);
     }
 
     @Operation(summary = "изменить название проекта и заказчика")
     @PutMapping(value = "/project/{id}")
     public void editProject(@PathVariable("id") Long projectId,
                             @RequestBody EditProjectRequestDto editProjectRequestDto) {
+        projectService.editProject(projectId, editProjectRequestDto);
 
     }
+
+    @Operation(summary = "завершить проект")
+    @PutMapping(value = "/project/{id}/complete")
+    public void completeProject(@PathVariable("id") Long projectId) {
+        projectService.completeProject(projectId);
+
+    }
+
+
 }

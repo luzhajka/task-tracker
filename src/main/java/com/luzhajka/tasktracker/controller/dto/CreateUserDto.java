@@ -5,10 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class CreateUserDto {
 
     @Schema(description = "Имя пользователя")
-    String name;
+    private String name;
 
     @Schema(description = "Роль пользователя")
-    UserRole role;
+    private UserRole role;
 
     public CreateUserDto(String name, UserRole role) {
 

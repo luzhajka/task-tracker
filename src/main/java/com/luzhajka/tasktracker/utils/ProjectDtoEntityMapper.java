@@ -9,4 +9,5 @@ public interface ProjectDtoEntityMapper {
     ProjectDto entityToDto(ProjectEntity entity);
 
     ProjectEntity dtoToEntity(ProjectDto dto);
+
 }

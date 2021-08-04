@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ReleaseRepository extends JpaRepository<ReleaseEntity, Long> {
     Optional<List<ReleaseEntity>> findAllByProjectId(Long projectId);
-    //Optional<ReleaseEntity> findById (Long projectId);
+
 }
 

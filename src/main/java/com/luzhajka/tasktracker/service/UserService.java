@@ -1,5 +1,6 @@
 package com.luzhajka.tasktracker.service;
 
+import com.luzhajka.tasktracker.controller.dto.CreateUserDto;
 import com.luzhajka.tasktracker.controller.dto.EditUserRequestDto;
 import com.luzhajka.tasktracker.controller.dto.UserDto;
 
@@ -10,7 +11,9 @@ public interface UserService {
 
     public List<UserDto> getUsers();
 
-    public Long postUser(UserDto userDto);
+    public Long createUser(CreateUserDto userDto);
 
     public void editUser(Long userId, EditUserRequestDto editUserRequestDto);
+
+    public void deleteUser(Long userId);
 }

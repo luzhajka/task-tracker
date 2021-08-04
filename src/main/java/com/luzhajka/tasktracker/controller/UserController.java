@@ -1,5 +1,6 @@
 package com.luzhajka.tasktracker.controller;
 
+import com.luzhajka.tasktracker.controller.dto.CreateUserDto;
 import com.luzhajka.tasktracker.controller.dto.EditUserRequestDto;
 import com.luzhajka.tasktracker.controller.dto.UserDto;
 import com.luzhajka.tasktracker.service.UserService;
@@ -31,19 +32,15 @@ public class UserController {
     }
 
     @Operation(summary = "получить список пользователей")
-    @GetMapping(value = "/user/role")
+    @GetMapping(value = "/users/")
     public List<UserDto> getUsers() {
-        List<UserDto> userList = List.of();
-        return userList;
+        return userService.getUsers();
     }
 
     @Operation(summary = "добавить пользователя")
     @PostMapping(value = "/user")
-    public Long postUser(@RequestBody UserDto userDto) {
-        //createUserDTO в БД
-        //БД присвоит userID
-        Long userId = 33L;
-        return userId;
+    public Long createUser(@RequestBody CreateUserDto createUserDto) {
+        return userService.createUser(createUserDto);
 
     }
 
@@ -51,12 +48,12 @@ public class UserController {
     @PutMapping(value = "/user/{id}")
     public void editUser(@PathVariable("id") Long userId,
                          @RequestBody EditUserRequestDto editUserRequestDto) {
+        userService.editUser(userId, editUserRequestDto);
     }
 
     @Operation(summary = "удалить пользователя")
     @DeleteMapping(value = "/user/{id}")
     public void deleteUser(@PathVariable("id") Long id) {
-        // проверить роль запрашивающего на право удаления пользователя
-        // удаление сущности из БД
+        userService.deleteUser(id);
     }
 }

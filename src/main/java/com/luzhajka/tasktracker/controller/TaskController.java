@@ -1,5 +1,8 @@
 package com.luzhajka.tasktracker.controller;
 
+import com.luzhajka.tasktracker.controller.dto.ChangeTaskExecutorDto;
+import com.luzhajka.tasktracker.controller.dto.ChangeTaskReleaseDto;
+import com.luzhajka.tasktracker.controller.dto.ChangeTaskStatusDto;
 import com.luzhajka.tasktracker.controller.dto.CreateTaskDto;
 import com.luzhajka.tasktracker.controller.dto.EditTaskRequestDto;
 import com.luzhajka.tasktracker.controller.dto.TaskDto;
@@ -30,7 +33,7 @@ public class TaskController {
 
     @Operation(summary = "получить задачу по ID")
     @GetMapping(value = "/task/{id}")
-    public TaskDto getTask(@PathVariable("id") String taskId) {
+    public TaskDto getTask(@PathVariable("id") UUID taskId) {
         return taskService.getTaskById(taskId);
     }
 
@@ -44,10 +47,7 @@ public class TaskController {
     @Operation(summary = "создать задачу")
     @PostMapping(value = "/tasks")
     public UUID postTask(@RequestBody CreateTaskDto createTaskDto) {
-        //CreateTaskDTO в БД
-        //БД присвоит taskID
-
-        return UUID.randomUUID();
+        return taskService.postTask(createTaskDto);
     }
 
 
@@ -55,15 +55,38 @@ public class TaskController {
     @PutMapping(value = "/task/{id}")
     public void editTask(@PathVariable("id") UUID taskId,
                          @RequestBody EditTaskRequestDto editTaskDto) {
-
+        taskService.editTask(taskId, editTaskDto);
     }
+
+    @Operation(summary = "назначить или изменить исполнителя задачи")
+    @PutMapping(value = "/task/{id}/executor")
+    public void editTaskExecutor(@PathVariable("id") UUID taskId,
+                                 @RequestBody ChangeTaskExecutorDto executor) {
+        taskService.changeExecutor(taskId, executor);
+    }
+
+    @Operation(summary = "изменить статус задачи")
+    @PutMapping(value = "/task/{id}/status")
+    public void editTaskStatus(@PathVariable("id") UUID taskId,
+                               @RequestBody ChangeTaskStatusDto status) {
+        taskService.changeStatus(taskId, status);
+    }
+
+    @Operation(summary = "назначить или изменить релиз для задачи")
+    @PutMapping(value = "/task/{id}/release")
+    public void editTaskRelease(@PathVariable("id") UUID taskId,
+                                @RequestBody ChangeTaskReleaseDto release) {
+        taskService.changeRelease(taskId, release);
+    }
+
+
+    //(назначение исполнителя, релиза и др, смена статуса задачи)
 
 
     @Operation(summary = "Удаление задачи")
     @DeleteMapping(value = "/tasks/{id}")
     public void deleteTask(@PathVariable UUID id) {
-        // проверить роль запрашивающего на право удаления задачи
-        // удаление сущности из БД
+        taskService.deleteTask(id);
     }
 
 }

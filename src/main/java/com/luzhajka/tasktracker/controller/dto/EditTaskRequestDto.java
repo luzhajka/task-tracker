@@ -1,18 +1,18 @@
 package com.luzhajka.tasktracker.controller.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class EditTaskRequestDto {
-    String name;
-    String description;
-    String statusTask;
-    Long executorId;
-    Long releaseId;
+    @Schema(description = "Название задачи")
+    private String name;
+
+    @Schema(description = "Описание задачи")
+    private String description;
+
 
     public EditTaskRequestDto(String name, String description, String statusTask, Long executorId, Long releaseId) {
         this.name = name;
         this.description = description;
-        this.statusTask = statusTask;
-        this.executorId = executorId;
-        this.releaseId = releaseId;
     }
 
     public String getName() {
@@ -31,27 +31,4 @@ public class EditTaskRequestDto {
         this.description = description;
     }
 
-    public String getStatusTask() {
-        return statusTask;
-    }
-
-    public void setStatusTask(String statusTask) {
-        this.statusTask = statusTask;
-    }
-
-    public Long getExecutorId() {
-        return executorId;
-    }
-
-    public void setExecutorId(Long executorId) {
-        this.executorId = executorId;
-    }
-
-    public Long getReleaseId() {
-        return releaseId;
-    }
-
-    public void setReleaseId(Long releaseId) {
-        this.releaseId = releaseId;
-    }
 }

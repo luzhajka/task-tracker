@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class CreateProjectDto {
     @Schema(description = "Название проекта")
-    String projectName;
+    private String projectName;
 
     @Schema(description = "Заказчик проекта")
-    String client;
+    private String client;
 
     @Schema(description = "Статус проекта")
-    ProjectStatus status;
+    private ProjectStatus status;
 
     public CreateProjectDto(String projectName, String client, ProjectStatus status) {
         this.projectName = projectName;

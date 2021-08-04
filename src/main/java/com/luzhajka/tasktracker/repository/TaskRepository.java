@@ -20,9 +20,26 @@ public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
 
     Optional<List<TaskEntity>> findAllByStatus(String status);
 
+    Optional<List<TaskEntity>> findAllByProjectId(Long projectId);
+
     Optional<List<TaskEntity>> findAllByReleaseIdAndExecutorIdAndStatus(
             Long releaseId,
             Long executorId,
+            String status
+    );
+
+    Optional<List<TaskEntity>> findAllByProjectIdAndStatusIsNot(
+            Long projectId,
+            String status
+    );
+
+    Optional<List<TaskEntity>> findAllByReleaseIdAndStatusIsNot(
+            Long releaseId,
+            String status
+    );
+
+    Integer countAllByReleaseIdAndStatusIsNot(
+            Long releaseId,
             String status
     );
 

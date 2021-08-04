@@ -1,7 +1,11 @@
 package com.luzhajka.tasktracker.controller.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class GetReleasesRequestDto {
-    Long projectId;
+
+    @Schema(description = "ID проекта")
+    private Long projectId;
 
     public GetReleasesRequestDto(Long projectId) {
         this.projectId = projectId;
