@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.springframework.util.StringUtils.hasText;
@@ -89,9 +88,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void completeProject(Long projectId) {
-        Optional<List<TaskEntity>> openedTasks = taskRepository
-                .findAllByProjectIdAndStatusIsNot(projectId, TaskStatus.done.name());
-        if (openedTasks.isEmpty() || openedTasks.get().isEmpty()) {
+        List<TaskEntity> openedTasks = taskRepository.findAllByProjectIdAndStatusIsNot(projectId, TaskStatus.done.name());
+        if (openedTasks.isEmpty()) {
             ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
                     () -> {
                         LOGGER.error(format("Project by ID = %d not found", projectId));

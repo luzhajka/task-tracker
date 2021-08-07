@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -60,48 +59,22 @@ public class TaskServiceImpl implements TaskService {
         String status = taskFilterRequestDto.getStatus();
 
         List<TaskEntity> taskEntityList;
-        Optional<List<TaskEntity>> optionalTaskList;
-
 
         if (releaseId == null && authorId == null && executorId == null && status == null) {
             taskEntityList = taskRepository.findAll();
         } else if (releaseId == null && authorId == null && executorId == null) {
-            optionalTaskList = taskRepository.findAllByStatus(status);
-            taskEntityList = optionalTaskList.orElseThrow(
-                    () -> new EntityNotFoundException(format("Tasks by this status = %s not found", status))
-            );
-
+            taskEntityList = taskRepository.findAllByStatus(status);
         } else if (releaseId == null && authorId == null && status == null) {
-            optionalTaskList = taskRepository.findAllByExecutorId(executorId);
-            taskEntityList = optionalTaskList.orElseThrow(
-                    () -> new EntityNotFoundException(format("Tasks by this executor by ID = %d not found", executorId))
-            );
-
-
+            taskEntityList = taskRepository.findAllByExecutorId(executorId);
         } else if (releaseId == null && executorId == null && status == null) {
-            optionalTaskList = taskRepository.findAllByAuthorId(authorId);
-            taskEntityList = optionalTaskList.orElseThrow(
-                    () -> new EntityNotFoundException(format("Tasks by this author by ID = %d not found", authorId))
-            );
-
+            taskEntityList = taskRepository.findAllByAuthorId(authorId);
         } else if (authorId == null && executorId == null && status == null) {
-            optionalTaskList = taskRepository.findAllByRelease(releaseId);
-            taskEntityList = optionalTaskList.orElseThrow(() -> new EntityNotFoundException(
-                    format("Tasks by this release by ID = %d not found", releaseId))
-            );
-
+            taskEntityList = taskRepository.findAllByRelease(releaseId);
         } else {
-            optionalTaskList = taskRepository.findAllByReleaseIdAndExecutorIdAndStatus(releaseId, executorId, status);
-            taskEntityList = optionalTaskList.orElseThrow(
-                    () -> new EntityNotFoundException(
-                            format("Tasks by this release by ID = %d executor by ID = %d status = %s not found", releaseId, executorId, status)
-                    )
-            );
+            taskEntityList = taskRepository.findAllByReleaseIdAndExecutorIdAndStatus(releaseId, executorId, status);
         }
 
-        return taskEntityList.stream()
-                .map(mapper::entityToDto)
-                .collect(toList());
+        return taskEntityList.stream().map(mapper::entityToDto).collect(toList());
     }
 
     @Transactional
@@ -162,10 +135,8 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void deleteTask(UUID id) {
-
         taskRepository.delete(taskRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(format("Tasks by ID = %s not found", id))));
-
     }
 }
 

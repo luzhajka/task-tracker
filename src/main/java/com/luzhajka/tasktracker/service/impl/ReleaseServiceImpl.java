@@ -57,9 +57,6 @@ public class ReleaseServiceImpl implements ReleaseService {
         Long projectId = getReleasesRequestDto.getProjectId();
 
         return releaseRepository.findAllByProjectId(projectId)
-                .orElseThrow(
-                        () -> new javax.persistence.EntityNotFoundException(format("Releases by project ID = %d not found", projectId))
-                )
                 .stream()
                 .map(mapper::entityToDto)
                 .collect(toList());
@@ -70,12 +67,11 @@ public class ReleaseServiceImpl implements ReleaseService {
     public List<UUID> getUnclosedTasksByRelease(Long releaseId) {
 
         List<TaskEntity> unfinishedTaskByRelease = taskRepository
-                .findAllByReleaseIdAndStatusIsNot(releaseId, TaskStatus.done.name()).orElse(List.of());
+                .findAllByReleaseIdAndStatusIsNot(releaseId, TaskStatus.done.name());
 
         return unfinishedTaskByRelease.stream()
                 .map(TaskEntity::getId)
                 .collect(toList());
-
     }
 
 
