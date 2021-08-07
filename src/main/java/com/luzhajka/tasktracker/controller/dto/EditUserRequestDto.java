@@ -1,8 +1,13 @@
 package com.luzhajka.tasktracker.controller.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class EditUserRequestDto {
-    String userName;
-    String userRole;
+    @Schema(description = "Имя пользователя")
+    private String userName;
+
+    @Schema(description = "Роль пользователя")
+    private String userRole;
 
     public EditUserRequestDto(String userName, String userRole) {
         this.userName = userName;

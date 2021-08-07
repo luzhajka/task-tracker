@@ -1,11 +1,15 @@
 package com.luzhajka.tasktracker.controller.dto;
 
-public class TaskFilterRequestDto {
+import io.swagger.v3.oas.annotations.media.Schema;
 
-    Long releaseId;
-    Long authorId;
-    Long executorId;
-    String status;
+public class TaskFilterRequestDto {
+    @Schema(description = "ID релиза")
+    private Long releaseId;
+
+    @Schema(description = "ID проекта")
+    private Long authorId;
+    private Long executorId;
+    private String status;
 
     public TaskFilterRequestDto(Long releaseId, Long authorId, Long executorId, String status) {
         this.releaseId = releaseId;

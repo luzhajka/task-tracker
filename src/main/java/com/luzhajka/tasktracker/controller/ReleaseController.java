@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Управление")
 @RestController("${server.api-base-url}")
@@ -36,23 +37,35 @@ public class ReleaseController {
     @Operation(summary = "получить список релизов проекта")
     @GetMapping(value = "/releases")
     public List<ReleaseDto> getReleases(@RequestBody GetReleasesRequestDto getReleasesRequestDto) {
-        //заглушка. возвращаем releaseList со всеми релизами
-        List<ReleaseDto> releaseList = List.of();
-        return releaseList;
+        return releaseService.getReleases(getReleasesRequestDto);
+    }
+
+    @Operation(summary = "получить список незавершенных задач в релизе")
+    @GetMapping(value = "/release/{id}/tasks/unfinished")
+    public List<UUID> getUnclosedTasksByRelease(@PathVariable("id") Long releaseId) {
+        return releaseService.getUnclosedTasksByRelease(releaseId);
+    }
+
+    @Operation(summary = "получить количество незавершенных задач в релизе")
+    @GetMapping(value = "/release/{id}/tasks/unfinished/count")
+    public Integer countUnclosedTasks(@PathVariable("id") Long releaseId) {
+        return releaseService.countUnclosedTask(releaseId);
     }
 
     @Operation(summary = "добавить релиз")
     @PostMapping(value = "/release")
-    public Long postRelease(@RequestBody CreateReleaseDto createReleaseDTO) {
-        //createReleaseDTO в БД
-        //БД присвоит releaseID
-        Long releaseId = 44L;
-        return releaseId;
+    public Long createRelease(@RequestBody CreateReleaseDto createReleaseDTO) {
+        return releaseService.createRelease(createReleaseDTO);
     }
 
     @Operation(summary = "изменить версию или сроки релиза")
     @PutMapping(value = "/release/{id}")
     public void editRelease(@PathVariable("id") Long releaseId,
                             @RequestBody EditReleaseRequestDto editReleaseRequestDto) {
+        releaseService.editRelease(releaseId, editReleaseRequestDto);
     }
+
+
+
+
 }

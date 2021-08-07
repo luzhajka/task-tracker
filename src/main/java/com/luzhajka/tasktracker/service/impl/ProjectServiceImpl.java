@@ -3,23 +3,40 @@ package com.luzhajka.tasktracker.service.impl;
 import com.luzhajka.tasktracker.controller.dto.CreateProjectDto;
 import com.luzhajka.tasktracker.controller.dto.EditProjectRequestDto;
 import com.luzhajka.tasktracker.controller.dto.ProjectDto;
-import com.luzhajka.tasktracker.exceptions.EntityNotFoundExceptions;
+import com.luzhajka.tasktracker.controller.dto.ProjectStatus;
+import com.luzhajka.tasktracker.controller.dto.TaskStatus;
+import com.luzhajka.tasktracker.entity.ProjectEntity;
+import com.luzhajka.tasktracker.entity.TaskEntity;
+import com.luzhajka.tasktracker.exceptions.EntityNotFoundException;
+import com.luzhajka.tasktracker.exceptions.InvalidProjectStateException;
 import com.luzhajka.tasktracker.repository.ProjectRepository;
+import com.luzhajka.tasktracker.repository.TaskRepository;
 import com.luzhajka.tasktracker.service.ProjectService;
+import com.luzhajka.tasktracker.utils.CreateProjectDtoEntityMapper;
 import com.luzhajka.tasktracker.utils.ProjectDtoEntityMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.springframework.util.StringUtils.hasText;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectServiceImpl.class);
     private final ProjectRepository projectRepository;
     private final ProjectDtoEntityMapper mapper;
+    private final CreateProjectDtoEntityMapper createMapper;
+    private final TaskRepository taskRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectDtoEntityMapper mapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectDtoEntityMapper mapper, CreateProjectDtoEntityMapper createMapper, TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.mapper = mapper;
+        this.createMapper = createMapper;
+        this.taskRepository = taskRepository;
     }
 
     @Transactional
@@ -28,19 +45,60 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findById(projectId)
                 .map(mapper::entityToDto)
                 .orElseThrow(
-                        () -> new EntityNotFoundExceptions(format("Project by id = %s not found", projectId))
+                        () -> {
+                            LOGGER.error(format("Project by ID = %d not found", projectId));
+                            return new EntityNotFoundException("Project not found");
+                        }
                 );
     }
 
     @Transactional
     @Override
-    public Long postProject(CreateProjectDto createProjectDTO) {
-        return null;
+    public Long createProject(CreateProjectDto createProjectDTO) {
+        ProjectEntity projectEntity = createMapper.dtoToEntity(createProjectDTO);
+        ProjectEntity projectEntityResult = projectRepository.saveAndFlush(projectEntity);
+        return projectEntityResult.getId();
     }
 
     @Transactional
     @Override
-    public void editProject(String projectId, EditProjectRequestDto editProjectRequestDto) {
+    public void editProject(Long projectId, EditProjectRequestDto editProjectRequestDto) {
+        ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
+                () -> {
+                    LOGGER.error(format("Project by ID = %d not found", projectId));
+                    return new EntityNotFoundException("Project not found");
+                }
+        );
 
+        projectEntity.setProjectName(hasText(editProjectRequestDto.getProjectName())
+                ? editProjectRequestDto.getProjectName()
+                : projectEntity.getProjectName());
+
+        projectEntity.setClientId(editProjectRequestDto.getClientId() != null
+                ? editProjectRequestDto.getClientId()
+                : projectEntity.getClientId());
+
+        projectEntity.setStatus(hasText(editProjectRequestDto.getStatusProject())
+                ? editProjectRequestDto.getStatusProject()
+                : projectEntity.getStatus());
+
+        projectRepository.saveAndFlush(projectEntity);
+
+    }
+
+    @Override
+    public void completeProject(Long projectId) {
+        List<TaskEntity> openedTasks = taskRepository.findAllByProjectIdAndStatusIsNot(projectId, TaskStatus.done.name());
+        if (openedTasks.isEmpty()) {
+            ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
+                    () -> {
+                        LOGGER.error(format("Project by ID = %d not found", projectId));
+                        return new EntityNotFoundException("Project not found");
+                    }
+            );
+            projectEntity.setStatus(ProjectStatus.DONE.name());
+            return;
+        }
+        throw new InvalidProjectStateException("На проекте остались незавершенные задачи");
     }
 }

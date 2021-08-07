@@ -1,14 +1,21 @@
 package com.luzhajka.tasktracker.controller.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class EditProjectRequestDto {
 
-    String projectName;
-    String clientName;
-    String statusProject;
+    @Schema (description = "Название проекта")
+    private String projectName;
 
-    public EditProjectRequestDto(String projectName, String clientName, String statusProject) {
+    @Schema(description = "Заказчик проекта")
+    private Long clientId;
+
+    @Schema(description = "Статус проекта")
+    private String statusProject;
+
+    public EditProjectRequestDto(String projectName, Long clientId, String statusProject) {
         this.projectName = projectName;
-        this.clientName = clientName;
+        this.clientId = clientId;
         this.statusProject = statusProject;
     }
 
@@ -20,12 +27,12 @@ public class EditProjectRequestDto {
         this.projectName = projectName;
     }
 
-    public String getClientName() {
-        return clientName;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public String getStatusProject() {

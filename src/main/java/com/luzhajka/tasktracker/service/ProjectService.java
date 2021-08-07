@@ -8,7 +8,10 @@ public interface ProjectService {
 
     public ProjectDto getProject(Long projectId);
 
-    public Long postProject(CreateProjectDto createProjectDTO);
+    public Long createProject(CreateProjectDto createProjectDTO);
 
-    public void editProject(String projectId, EditProjectRequestDto editProjectRequestDto);
+    public void editProject(Long projectId, EditProjectRequestDto editProjectRequestDto);
+
+    public void completeProject(Long projectId);
+
 }
