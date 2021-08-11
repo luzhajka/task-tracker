@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,6 +52,11 @@ public class TaskController {
         return taskService.postTask(createTaskDto);
     }
 
+    @Operation(summary = "создать задачу с помощью CSV файла")
+    @PostMapping(path = "/upload")
+    public void uploadFile(@RequestParam MultipartFile file) {
+        taskService.uploadTasks(file);
+    }
 
     @Operation(summary = "изменить название и описание задачи")
     @PutMapping(value = "/task/{id}")

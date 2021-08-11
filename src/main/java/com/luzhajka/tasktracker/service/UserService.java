@@ -3,17 +3,50 @@ package com.luzhajka.tasktracker.service;
 import com.luzhajka.tasktracker.controller.dto.CreateUserDto;
 import com.luzhajka.tasktracker.controller.dto.EditUserRequestDto;
 import com.luzhajka.tasktracker.controller.dto.UserDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
-    public UserDto getUser(Long userId);
+/**
+ * Сервис для работы с пользователями
+ */
+public interface UserService extends UserDetailsService {
 
-    public List<UserDto> getUsers();
+    /**
+     * Метод получения пользователя по его ID
+     *
+     * @param userId - первичный ключ для пользователя
+     * @return - User DTO
+     */
+    UserDto getUser(Long userId);
 
-    public Long createUser(CreateUserDto userDto);
+    /**
+     * Метод получения списка всех пользователей
+     *
+     * @return - список всех пользователей
+     */
+    List<UserDto> getUsers();
 
-    public void editUser(Long userId, EditUserRequestDto editUserRequestDto);
+    /**
+     * Метод создания пользователя
+     *
+     * @param userDto DTO пользователя с заполненными полями без ID
+     * @return - ID пользователя (первичный ключ)
+     */
+    Long createUser(CreateUserDto userDto);
 
-    public void deleteUser(Long userId);
+    /**
+     * Метод изменения пользователя с позможность изменения имени пользователя или роли пользователя
+     *
+     * @param userId - первичный ключ для пользователя
+     * @param editUserRequestDto - DTO пользователя с полями для измениний
+     */
+    void editUser(Long userId, EditUserRequestDto editUserRequestDto);
+
+    /**
+     * Метод удаления пользователя
+     *
+     * @param userId - первичный ключ для пользователя
+     */
+    void deleteUser(Long userId);
 }
