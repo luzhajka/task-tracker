@@ -4,12 +4,16 @@ import com.luzhajka.tasktracker.controller.dto.CreateUserDto;
 import com.luzhajka.tasktracker.controller.dto.EditUserRequestDto;
 import com.luzhajka.tasktracker.controller.dto.UserDto;
 import com.luzhajka.tasktracker.entity.UserEntity;
+import com.luzhajka.tasktracker.exceptions.UserNotFoundException;
 import com.luzhajka.tasktracker.repository.UserRepository;
 import com.luzhajka.tasktracker.service.UserService;
 import com.luzhajka.tasktracker.utils.CreateUserDtoEntityMapper;
 import com.luzhajka.tasktracker.utils.UserDtoEntityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -26,11 +30,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserDtoEntityMapper mapper;
     private final CreateUserDtoEntityMapper createMapper;
+    private final BCryptPasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserDtoEntityMapper mapper, CreateUserDtoEntityMapper createMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserDtoEntityMapper mapper, CreateUserDtoEntityMapper createMapper, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.createMapper = createMapper;
+        this.encoder = encoder;
     }
 
 
@@ -53,6 +59,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Long createUser(CreateUserDto userDto) {
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
         UserEntity userEntity = createMapper.dtoToEntity(userDto);
         UserEntity userEntityResult = userRepository.saveAndFlush(userEntity);
         return userEntityResult.getId();
@@ -83,5 +90,14 @@ public class UserServiceImpl implements UserService {
                         () -> new EntityNotFoundException(format("User by ID = %d not found", userId))
                 )
         );
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+
+        UserEntity userEntity = userRepository.findFirstByLogin(login).orElseThrow(
+                () -> new UserNotFoundException(format("User by login = %s not found", login))
+        );
+        return userEntity;
     }
 }

@@ -4,21 +4,53 @@ import com.luzhajka.tasktracker.controller.dto.CreateReleaseDto;
 import com.luzhajka.tasktracker.controller.dto.EditReleaseRequestDto;
 import com.luzhajka.tasktracker.controller.dto.GetReleasesRequestDto;
 import com.luzhajka.tasktracker.controller.dto.ReleaseDto;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сервис для работы с релизами
+ */
 public interface ReleaseService {
-    public ReleaseDto getRelease(Long releaseId);
+    ReleaseDto getRelease(Long releaseId);
 
-    public List<ReleaseDto> getReleases(GetReleasesRequestDto getReleasesRequestDto);
+    /**
+     * Метод получения списка релизов проекта по ID проекта
+     *
+     * @param getReleasesRequestDto - ID проекта
+     * @return - списка релизов проекта
+     */
+    List<ReleaseDto> getReleases(GetReleasesRequestDto getReleasesRequestDto);
 
-    public List<UUID> getUnclosedTasksByRelease(Long releaseId);
+    /**
+     * Метод получения списка незавершенныз задач релиза
+     *
+     * @param releaseId - первичный ключ для релиза
+     * @return - список незавершенныз задач релиза
+     */
+    List<UUID> getUnclosedTasksByRelease(Long releaseId);
 
-    public Integer countUnclosedTask(Long releaseId);
+    /**
+     * Метод получения количества незавершенныз задач релиза
+     *
+     * @param releaseId - первичный ключ для релиза
+     * @return - количество незавершенныз задач релиза
+     */
+    Integer countUnclosedTask(Long releaseId);
 
-    public Long createRelease(CreateReleaseDto createReleaseDto);
+    /**
+     * Метод создания релиза
+     *
+     * @param createReleaseDto - DTO релиза с заполненными полями без ID
+     * @return - ID релиза (первичный ключ)
+     */
+    Long createRelease(CreateReleaseDto createReleaseDto);
 
-    public void editRelease(Long releaseId, EditReleaseRequestDto editReleaseRequestDto);
+    /**
+     * Метод для изменения релиза с возможностью изменить версию или сроки релиза
+     *
+     * @param releaseId             - первичный ключ для релиза
+     * @param editReleaseRequestDto - DTO проекта с полями для измениний
+     */
+    void editRelease(Long releaseId, EditReleaseRequestDto editReleaseRequestDto);
 }

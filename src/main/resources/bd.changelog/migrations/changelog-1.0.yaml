@@ -143,3 +143,32 @@ databaseChangeLog:
             sql: comment on table project is 'Таблица хранения проектов';
 
 
+
+  - changeSet:
+      id: addColumns-user
+      author: olga-smirnova-luzhajka
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: login
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: password
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: permissionRole
+                  type: varchar(50)
+                  constraints:
+                    nullable: false

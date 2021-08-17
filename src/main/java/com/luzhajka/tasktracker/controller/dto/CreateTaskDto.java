@@ -12,21 +12,21 @@ public class CreateTaskDto {
     private String description;
 
     @Schema(description = "Автор задачи")
-    private UserDto author;
+    private Long author;
 
     @Schema(description = "Исполнитель задачи")
-    private UserDto executor;
+    private Long executor;
 
     @Schema(description = "Статус задачи")
     private TaskStatus status;
 
     @Schema(description = "Релиз, на который объявлена задача")
-    private Integer release;
+    private Long release;
 
     @Schema(description = "Проект, которому принадлежит задача")
     private Long project;
 
-    public CreateTaskDto(String name, String description, UserDto author, UserDto executor, TaskStatus status, Integer release, Long project) {
+    public CreateTaskDto(String name, String description, Long author, Long executor, TaskStatus status, Long release, Long project) {
         this.name = name;
         this.description = description;
         this.author = author;
@@ -39,10 +39,10 @@ public class CreateTaskDto {
     public static class CreateTaskDTOBuilder {
         private String name;
         private String description;
-        private UserDto author;
-        private UserDto executor;
+        private Long author;
+        private Long executor;
         private TaskStatus status;
-        private Integer release;
+        private Long release;
         private Long project;
 
 
@@ -56,12 +56,12 @@ public class CreateTaskDto {
             return this;
         }
 
-        public CreateTaskDto.CreateTaskDTOBuilder author(UserDto author) {
+        public CreateTaskDto.CreateTaskDTOBuilder author(Long author) {
             this.author = author;
             return this;
         }
 
-        public CreateTaskDto.CreateTaskDTOBuilder executor(UserDto executor) {
+        public CreateTaskDto.CreateTaskDTOBuilder executor(Long executor) {
             this.executor = executor;
             return this;
         }
@@ -71,7 +71,7 @@ public class CreateTaskDto {
             return this;
         }
 
-        public CreateTaskDto.CreateTaskDTOBuilder release(Integer release) {
+        public CreateTaskDto.CreateTaskDTOBuilder release(Long release) {
             this.release = release;
             return this;
         }
@@ -95,11 +95,11 @@ public class CreateTaskDto {
         return description;
     }
 
-    public UserDto getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public UserDto getExecutor() {
+    public Long getExecutor() {
         return executor;
     }
 
@@ -107,7 +107,7 @@ public class CreateTaskDto {
         return status;
     }
 
-    public Integer getRelease() {
+    public Long getRelease() {
         return release;
     }
 
@@ -123,11 +123,11 @@ public class CreateTaskDto {
         this.description = description;
     }
 
-    public void setAuthor(UserDto author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 
-    public void setExecutor(UserDto executor) {
+    public void setExecutor(Long executor) {
         this.executor = executor;
     }
 
@@ -135,7 +135,7 @@ public class CreateTaskDto {
         this.status = status;
     }
 
-    public void setRelease(Integer release) {
+    public void setRelease(Long release) {
         this.release = release;
     }
 
