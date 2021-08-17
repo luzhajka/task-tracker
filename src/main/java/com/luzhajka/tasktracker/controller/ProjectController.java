@@ -45,6 +45,13 @@ public class ProjectController {
 
     }
 
+    @Operation(summary = "запустить проект")
+    @PutMapping(value = "/project/{id}/start")
+    public void startProject(@PathVariable("id") Long projectId) {
+        projectService.startProject(projectId);
+
+    }
+
     @Operation(summary = "завершить проект")
     @PutMapping(value = "/project/{id}/complete")
     public void completeProject(@PathVariable("id") Long projectId) {

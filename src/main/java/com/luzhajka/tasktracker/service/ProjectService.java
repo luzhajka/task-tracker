@@ -40,4 +40,12 @@ public interface ProjectService {
      */
     void completeProject(Long projectId);
 
+
+    /**
+     * Метод старта проекта
+     *
+     * @param projectId - первичный ключ для проекта
+     */
+    void startProject(Long projectId);
+
 }
