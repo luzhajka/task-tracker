@@ -17,10 +17,10 @@ public class CreateUserDto {
     private String password;
 
     @Schema(description = "Права пользователя")
-    private String permissionRole;
+    private PermissionRole permissionRole;
 
 
-    public CreateUserDto(String name, UserRole role, String login, String password, String permissionRole) {
+    public CreateUserDto(String name, UserRole role, String login, String password, PermissionRole permissionRole) {
         this.name = name;
         this.role = role;
         this.login = login;
@@ -63,11 +63,11 @@ public class CreateUserDto {
         this.password = password;
     }
 
-    public String getPermissionRole() {
+    public PermissionRole getPermissionRole() {
         return permissionRole;
     }
 
-    public void setPermissionRole(String permissionRole) {
+    public void setPermissionRole(PermissionRole permissionRole) {
         this.permissionRole = permissionRole;
     }
 }

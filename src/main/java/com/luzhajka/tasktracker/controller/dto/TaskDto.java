@@ -40,7 +40,7 @@ public class TaskDto {
         this.project = project;
     }
 
-    public static class TaskDTOBuilder {
+    public static class TaskDtoBuilder {
         private UUID taskId;
         private String name;
         private String description;
@@ -50,42 +50,42 @@ public class TaskDto {
         private Long release;
         private Long project;
 
-        public TaskDTOBuilder taskId(UUID taskId) {
+        public TaskDtoBuilder taskId(UUID taskId) {
             this.taskId = taskId;
             return this;
         }
 
-        public TaskDTOBuilder name(String name) {
+        public TaskDtoBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public TaskDTOBuilder description(String description) {
+        public TaskDtoBuilder description(String description) {
             this.description = description;
             return this;
         }
 
-        public TaskDTOBuilder author(Long author) {
+        public TaskDtoBuilder author(Long author) {
             this.author = author;
             return this;
         }
 
-        public TaskDTOBuilder executor(Long executor) {
+        public TaskDtoBuilder executor(Long executor) {
             this.executor = executor;
             return this;
         }
 
-        public TaskDTOBuilder status(TaskStatus status) {
+        public TaskDtoBuilder status(TaskStatus status) {
             this.status = status;
             return this;
         }
 
-        public TaskDTOBuilder release(Long release) {
+        public TaskDtoBuilder release(Long release) {
             this.release = release;
             return this;
         }
 
-        public TaskDTOBuilder project(Long project) {
+        public TaskDtoBuilder project(Long project) {
             this.project = project;
             return this;
         }
