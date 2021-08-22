@@ -11,12 +11,11 @@ public class CreateProjectDto {
     private String client;
 
     @Schema(description = "Статус проекта")
-    private ProjectStatus status;
+    private ProjectStatus status = ProjectStatus.WAITING;
 
-    public CreateProjectDto(String projectName, String client, ProjectStatus status) {
+    public CreateProjectDto(String projectName, String client) {
         this.projectName = projectName;
         this.client = client;
-        this.status = status;
     }
 
     public String getProjectName() {
@@ -37,10 +36,6 @@ public class CreateProjectDto {
 
     public ProjectStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(ProjectStatus status) {
-        this.status = status;
     }
 
 }

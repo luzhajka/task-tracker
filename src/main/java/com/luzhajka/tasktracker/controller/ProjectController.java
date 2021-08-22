@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("${server.api-base-url}")
 public class ProjectController {
 
-    final ProjectService projectService;
+    private final ProjectService projectService;
 
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
@@ -42,6 +42,13 @@ public class ProjectController {
     public void editProject(@PathVariable("id") Long projectId,
                             @RequestBody EditProjectRequestDto editProjectRequestDto) {
         projectService.editProject(projectId, editProjectRequestDto);
+
+    }
+
+    @Operation(summary = "запустить проект")
+    @PutMapping(value = "/project/{id}/start")
+    public void startProject(@PathVariable("id") Long projectId) {
+        projectService.startProject(projectId);
 
     }
 

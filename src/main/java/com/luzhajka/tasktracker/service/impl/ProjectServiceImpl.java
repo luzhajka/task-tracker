@@ -1,5 +1,7 @@
 package com.luzhajka.tasktracker.service.impl;
 
+import com.luzhajka.tasktracker.client.ClientAccountServiceClient;
+import com.luzhajka.tasktracker.client.dto.PaymentDto;
 import com.luzhajka.tasktracker.controller.dto.CreateProjectDto;
 import com.luzhajka.tasktracker.controller.dto.EditProjectRequestDto;
 import com.luzhajka.tasktracker.controller.dto.ProjectDto;
@@ -9,6 +11,7 @@ import com.luzhajka.tasktracker.entity.ProjectEntity;
 import com.luzhajka.tasktracker.entity.TaskEntity;
 import com.luzhajka.tasktracker.exceptions.EntityNotFoundException;
 import com.luzhajka.tasktracker.exceptions.InvalidProjectStateException;
+import com.luzhajka.tasktracker.exceptions.PaymentNotFoundException;
 import com.luzhajka.tasktracker.repository.ProjectRepository;
 import com.luzhajka.tasktracker.repository.TaskRepository;
 import com.luzhajka.tasktracker.service.ProjectService;
@@ -31,12 +34,14 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectDtoEntityMapper mapper;
     private final CreateProjectDtoEntityMapper createMapper;
     private final TaskRepository taskRepository;
+    private final ClientAccountServiceClient client;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectDtoEntityMapper mapper, CreateProjectDtoEntityMapper createMapper, TaskRepository taskRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectDtoEntityMapper mapper, CreateProjectDtoEntityMapper createMapper, TaskRepository taskRepository, ClientAccountServiceClient client) {
         this.projectRepository = projectRepository;
         this.mapper = mapper;
         this.createMapper = createMapper;
         this.taskRepository = taskRepository;
+        this.client = client;
     }
 
     @Transactional
@@ -101,4 +106,21 @@ public class ProjectServiceImpl implements ProjectService {
         }
         throw new InvalidProjectStateException("На проекте остались незавершенные задачи");
     }
+
+    @Override
+    public void startProject(Long projectId) {
+        List<PaymentDto> projectPayment = client.getProjectPayment(projectId);
+        if (projectPayment.isEmpty()){
+            throw new PaymentNotFoundException(String.format("для проекта %d платежи не найдены", projectId));
+        }
+        ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
+                () -> {
+                    LOGGER.error(format("Project by ID = %d not found", projectId));
+                    return new EntityNotFoundException("Project not found");
+                }
+        );
+        projectEntity.setStatus(ProjectStatus.IN_PROGRESS.name());
+        projectRepository.saveAndFlush(projectEntity);
+    }
 }
+
