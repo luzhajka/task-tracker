@@ -1,6 +1,8 @@
 package com.luzhajka.tasktracker.client.dto;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigInteger;
 import java.util.UUID;
 
@@ -8,9 +10,14 @@ public class DebtDto {
     /**
      * сумма (amount) в копейках (учитывать при отображении)
      */
-    BigInteger amount;
-    UUID accountNumber;
-    Long projectId;
+    @Schema(description = "сумма операции")
+    private BigInteger amount;
+
+    @Schema(description = "номер лицевого счета")
+    private UUID accountNumber;
+
+    @Schema(description = "ID прокта")
+    private Long projectId;
 
 
     public DebtDto() {

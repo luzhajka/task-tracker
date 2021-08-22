@@ -8,19 +8,19 @@ import java.util.UUID;
 
 public class PaymentDto {
     @Schema(description = "id операции")
-    Long id;
+    private Long id;
 
     @Schema(description = "номер клиентского счета")
-    UUID personalAccount;
+    private UUID personalAccount;
 
     @Schema(description = "дата и время операции")
-    LocalDateTime dateTime;
+    private LocalDateTime dateTime;
 
     @Schema(description = "тип операции")
-    TypeOperation typeOperation;
+    private TypeOperation typeOperation;
 
     @Schema(description = "сумма средств, участвующих в операции")
-    BigInteger operationAmount;
+    private BigInteger operationAmount;
 
 
     public PaymentDto() {

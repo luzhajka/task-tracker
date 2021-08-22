@@ -21,7 +21,7 @@ import java.util.UUID;
 @Tag(name = "Управление")
 @RestController("${server.api-base-url}")
 public class ReleaseController {
-    final ReleaseService releaseService;
+    private final ReleaseService releaseService;
 
     public ReleaseController(ReleaseService releaseService) {
         this.releaseService = releaseService;

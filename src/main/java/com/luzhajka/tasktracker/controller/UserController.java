@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Управление")
 @RestController("${server.api-base-url}")
 public class UserController {
-    final UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
