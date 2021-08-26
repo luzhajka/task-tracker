@@ -5,30 +5,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class ProjectDto {
 
     @Schema(description = "ID проекта")
-    Long projectId;
+    Long id;
 
     @Schema(description = "Название проекта")
     String projectName;
 
     @Schema(description = "Заказчик проекта")
-    String client;
+    String clientId;
 
     @Schema(description = "Статус проекта")
     ProjectStatus status;
 
     public ProjectDto(Long projectId, String projectName, String client, ProjectStatus status) {
-        this.projectId = projectId;
+        this.id = projectId;
         this.projectName = projectName;
-        this.client = client;
+        this.clientId = client;
         this.status = status;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public Long getId() {
+        return id;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getProjectName() {
@@ -39,12 +39,12 @@ public class ProjectDto {
         this.projectName = projectName;
     }
 
-    public String getClient() {
-        return client;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public ProjectStatus getStatus() {

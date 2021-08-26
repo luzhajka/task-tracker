@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Управление")
-@RestController("${server.api-base-url}")
+@RestController
+@RequestMapping(value = "/release")
 public class ReleaseController {
     private final ReleaseService releaseService;
 
@@ -29,43 +31,40 @@ public class ReleaseController {
 
 
     @Operation(summary = "получить релиз по ID")
-    @GetMapping(value = "/release/{id}")
+    @GetMapping(value = "/{id}")
     public ReleaseDto getRelease(@PathVariable("id") Long releaseId) {
         return releaseService.getRelease(releaseId);
     }
 
     @Operation(summary = "получить список релизов проекта")
-    @GetMapping(value = "/releases")
+    @GetMapping(value = "/all")
     public List<ReleaseDto> getReleases(@RequestBody GetReleasesRequestDto getReleasesRequestDto) {
         return releaseService.getReleases(getReleasesRequestDto);
     }
 
     @Operation(summary = "получить список незавершенных задач в релизе")
-    @GetMapping(value = "/release/{id}/tasks/unfinished")
+    @GetMapping(value = "/{id}/tasks/unfinished")
     public List<UUID> getUnclosedTasksByRelease(@PathVariable("id") Long releaseId) {
         return releaseService.getUnclosedTasksByRelease(releaseId);
     }
 
     @Operation(summary = "получить количество незавершенных задач в релизе")
-    @GetMapping(value = "/release/{id}/tasks/unfinished/count")
+    @GetMapping(value = "/{id}/tasks/unfinished/count")
     public Integer countUnclosedTasks(@PathVariable("id") Long releaseId) {
         return releaseService.countUnclosedTask(releaseId);
     }
 
     @Operation(summary = "добавить релиз")
-    @PostMapping(value = "/release")
+    @PostMapping(value = "/new")
     public Long createRelease(@RequestBody CreateReleaseDto createReleaseDTO) {
         return releaseService.createRelease(createReleaseDTO);
     }
 
     @Operation(summary = "изменить версию или сроки релиза")
-    @PutMapping(value = "/release/{id}")
+    @PutMapping(value = "/{id}")
     public void editRelease(@PathVariable("id") Long releaseId,
                             @RequestBody EditReleaseRequestDto editReleaseRequestDto) {
         releaseService.editRelease(releaseId, editReleaseRequestDto);
     }
-
-
-
 
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
     List<TaskEntity> findAllById(UUID taskId);
 
-    List<TaskEntity> findAllByRelease(Long releaseId);
+    List<TaskEntity> findAllByReleaseId(Long releaseId);
 
     List<TaskEntity> findAllByAuthorId(Long authorId);
 

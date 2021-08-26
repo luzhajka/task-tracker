@@ -161,5 +161,18 @@ public class TaskDto {
         this.project = project;
     }
 
+    @Override
+    public String toString() {
+        return "TaskDto{" +
+                "taskId=" + taskId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", author=" + author +
+                ", executor=" + executor +
+                ", status=" + status +
+                ", release=" + release +
+                ", project=" + project +
+                '}';
+    }
 
 }

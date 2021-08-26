@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class ReleaseDto {
     @Schema(description = "ID релиза")
-    private Long releaseId;
+    private Long id;
 
     @Schema(description = "Версия релиза")
     private String version;
@@ -18,14 +18,14 @@ public class ReleaseDto {
     private LocalDate endRelease;
 
     @Schema(description = "Проект, которому принадлежит релиз")
-    private Long project;
+    private Long projectId;
 
-    public ReleaseDto(Long releaseId, String version, LocalDate startRelease, LocalDate endRelease, Long project) {
-        this.releaseId = releaseId;
+    public ReleaseDto(Long id, String version, LocalDate startRelease, LocalDate endRelease, Long projectId) {
+        this.id = id;
         this.version = version;
         this.startRelease = startRelease;
         this.endRelease = endRelease;
-        this.project = project;
+        this.projectId = projectId;
     }
 
     public static class ReleaseDtoBuilder {
@@ -65,8 +65,8 @@ public class ReleaseDto {
         }
     }
 
-    public Long getReleaseId() {
-        return releaseId;
+    public Long getId() {
+        return id;
     }
 
     public String getVersion() {
@@ -81,12 +81,12 @@ public class ReleaseDto {
         return endRelease;
     }
 
-    public Long getProject() {
-        return project;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setReleaseId(Long releaseId) {
-        this.releaseId = releaseId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setVersion(String version) {
@@ -101,7 +101,7 @@ public class ReleaseDto {
         this.endRelease = endRelease;
     }
 
-    public void setProject(Long project) {
-        this.project = project;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

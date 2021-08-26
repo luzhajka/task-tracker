@@ -24,7 +24,7 @@ public interface ClientAccountServiceClient {
      * @return Номер клиентского счета
      */
     @PostMapping("/account/new")
-    UUID createAccount(@RequestParam Long clientId);
+    UUID createAccount(@RequestParam("clientId") Long clientId);
 
 
     @PutMapping(value = "/account/deposit")
@@ -34,12 +34,12 @@ public interface ClientAccountServiceClient {
     void payProject(@RequestBody DebtDto debtDto);
 
     @GetMapping(value = "/account/operations/project")
-    List<PaymentDto> getProjectPayment(@RequestParam Long projectId);
+    List<PaymentDto> getProjectPayment(@RequestParam("projectId") Long projectId);
 
     @GetMapping(value = "/account/operations")
-    List<PaymentDto> getOperations(@RequestParam UUID clientAccountId);
+    List<PaymentDto> getOperations(@RequestParam("clientAccountId") UUID clientAccountId);
 
     @GetMapping(value = "/account/balance")
-    BigInteger getBalance(@RequestParam UUID clientAccountId);
+    BigInteger getBalance(@RequestParam("clientAccountId") UUID clientAccountId);
 
 }

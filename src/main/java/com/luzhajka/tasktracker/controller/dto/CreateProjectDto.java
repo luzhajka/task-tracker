@@ -8,14 +8,14 @@ public class CreateProjectDto {
     private String projectName;
 
     @Schema(description = "Заказчик проекта")
-    private String client;
+    private Long clientId;
 
     @Schema(description = "Статус проекта")
     private ProjectStatus status = ProjectStatus.WAITING;
 
-    public CreateProjectDto(String projectName, String client) {
+    public CreateProjectDto(String projectName, Long clientId) {
         this.projectName = projectName;
-        this.client = client;
+        this.clientId = clientId;
     }
 
     public String getProjectName() {
@@ -26,12 +26,12 @@ public class CreateProjectDto {
         this.projectName = projectName;
     }
 
-    public String getClient() {
-        return client;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public ProjectStatus getStatus() {

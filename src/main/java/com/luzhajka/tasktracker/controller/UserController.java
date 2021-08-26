@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Tag(name = "Управление")
-@RestController("${server.api-base-url}")
+@RestController
+@RequestMapping(value = "/user")
 public class UserController {
     private final UserService userService;
 
@@ -26,33 +28,32 @@ public class UserController {
     }
 
     @Operation(summary = "получить пользователя по ID")
-    @GetMapping(value = "/user/{id}")
+    @GetMapping(value = "/{id}")
     public UserDto getUser(@PathVariable("id") Long userId) {
         return userService.getUser(userId);
     }
 
     @Operation(summary = "получить список пользователей")
-    @GetMapping(value = "/users/")
+    @GetMapping(value = "/all")
     public List<UserDto> getUsers() {
         return userService.getUsers();
     }
 
     @Operation(summary = "добавить пользователя")
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/new")
     public Long createUser(@RequestBody CreateUserDto createUserDto) {
         return userService.createUser(createUserDto);
-
     }
 
     @Operation(summary = "изменить имя пользователя или роль пользователя")
-    @PutMapping(value = "/user/{id}")
+    @PutMapping(value = "/{id}")
     public void editUser(@PathVariable("id") Long userId,
                          @RequestBody EditUserRequestDto editUserRequestDto) {
         userService.editUser(userId, editUserRequestDto);
     }
 
     @Operation(summary = "удалить пользователя")
-    @DeleteMapping(value = "/user/{id}/delete")
+    @DeleteMapping(value = "/{id}")
     public void deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
     }

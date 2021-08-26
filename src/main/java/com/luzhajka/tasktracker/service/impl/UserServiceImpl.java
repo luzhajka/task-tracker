@@ -22,6 +22,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.luzhajka.tasktracker.utils.MessagesUtil.getMessageForLocale;
 import static java.lang.String.format;
 
 @Service
@@ -39,14 +40,13 @@ public class UserServiceImpl implements UserService {
         this.encoder = encoder;
     }
 
-
     @Transactional
     @Override
     public UserDto getUser(Long userId) {
         return userRepository.findById(userId)
                 .map(mapper::entityToDto)
                 .orElseThrow(
-                        () -> new EntityNotFoundException(format("User by ID = %d not found", userId))
+                        () -> new EntityNotFoundException(format(getMessageForLocale("user.by.id.not.found"), userId))
                 );
     }
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editUser(Long userId, EditUserRequestDto editUserRequestDto) {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(format("User by ID = %d not found", userId))
+                () -> new EntityNotFoundException(format(getMessageForLocale("user.by.id.not.found"), userId))
         );
 
         userEntity.setName(StringUtils.hasText(editUserRequestDto.getUserName())
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         userRepository.delete(
                 userRepository.findById(userId).orElseThrow(
-                        () -> new EntityNotFoundException(format("User by ID = %d not found", userId))
+                        () -> new EntityNotFoundException(format(getMessageForLocale("user.by.id.not.found"), userId))
                 )
         );
     }
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
         UserEntity userEntity = userRepository.findFirstByLogin(login).orElseThrow(
-                () -> new UserNotFoundException(format("User by login = %s not found", login))
+                () -> new UserNotFoundException(format(getMessageForLocale("user.by.login.not.found"), login))
         );
         return userEntity;
     }
