@@ -33,7 +33,8 @@ public class UserServiceImpl implements UserService {
     private final CreateUserDtoEntityMapper createMapper;
     private final BCryptPasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserDtoEntityMapper mapper, CreateUserDtoEntityMapper createMapper, BCryptPasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository userRepository, UserDtoEntityMapper mapper,
+                           CreateUserDtoEntityMapper createMapper, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.createMapper = createMapper;
@@ -45,9 +46,9 @@ public class UserServiceImpl implements UserService {
     public UserDto getUser(Long userId) {
         return userRepository.findById(userId)
                 .map(mapper::entityToDto)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(format(getMessageForLocale("user.by.id.not.found"), userId))
-                );
+                .orElseThrow(() -> new EntityNotFoundException(
+                                format(getMessageForLocale("user.by.id.not.found"), userId)
+                        ));
     }
 
     @Transactional
@@ -80,6 +81,7 @@ public class UserServiceImpl implements UserService {
                 ? editUserRequestDto.getUserRole()
                 : userEntity.getRole());
 
+        userRepository.saveAndFlush(userEntity);
     }
 
     @Transactional

@@ -134,4 +134,31 @@ public class UserEntity implements UserDetails, GrantedAuthority {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(this);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntity that = (UserEntity) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (permissionRole != null ? !permissionRole.equals(that.permissionRole) : that.permissionRole != null)
+            return false;
+        if (login != null ? !login.equals(that.login) : that.login != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return role != null ? role.equals(that.role) : that.role == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (permissionRole != null ? permissionRole.hashCode() : 0);
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        return result;
+    }
 }

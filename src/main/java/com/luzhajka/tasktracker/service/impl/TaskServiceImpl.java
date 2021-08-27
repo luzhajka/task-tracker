@@ -108,6 +108,8 @@ public class TaskServiceImpl implements TaskService {
         taskEntity.setDescription(hasText(editTaskDto.getDescription())
                 ? editTaskDto.getDescription()
                 : taskEntity.getDescription());
+
+        taskRepository.saveAndFlush(taskEntity);
     }
 
 
@@ -116,9 +118,10 @@ public class TaskServiceImpl implements TaskService {
         if (changeTaskExecutorDto.getExecutor() == null) {
             throw new EmptyRequestException(getMessageForLocale("empty.request"));
         }
-        taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)))
-                .setExecutorId(changeTaskExecutorDto.getExecutor());
+        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)));
+        taskEntity.setExecutorId(changeTaskExecutorDto.getExecutor());
+        taskRepository.saveAndFlush(taskEntity);
     }
 
     @Override
@@ -126,9 +129,10 @@ public class TaskServiceImpl implements TaskService {
         if (changeTaskStatusDto.getStatus() == null) {
             throw new EmptyRequestException(getMessageForLocale("empty.request"));
         }
-        taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId))).
-                setStatus(changeTaskStatusDto.getStatus().toString());
+        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)));
+        taskEntity.setStatus(changeTaskStatusDto.getStatus().toString());
+        taskRepository.saveAndFlush(taskEntity);
     }
 
     @Override
@@ -136,9 +140,10 @@ public class TaskServiceImpl implements TaskService {
         if (changeTaskReleaseDto.getRelease() == null) {
             throw new EmptyRequestException(getMessageForLocale("empty.request"));
         }
-        taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)))
-                .setReleaseId(changeTaskReleaseDto.getRelease());
+        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)));
+        taskEntity.setReleaseId(changeTaskReleaseDto.getRelease());
+        taskRepository.saveAndFlush(taskEntity);
     }
 
     @Transactional
