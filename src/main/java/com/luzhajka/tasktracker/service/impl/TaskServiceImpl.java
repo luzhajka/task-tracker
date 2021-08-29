@@ -11,6 +11,7 @@ import com.luzhajka.tasktracker.controller.dto.TaskStatus;
 import com.luzhajka.tasktracker.entity.TaskEntity;
 import com.luzhajka.tasktracker.exceptions.EmptyRequestException;
 import com.luzhajka.tasktracker.exceptions.EntityNotFoundException;
+import com.luzhajka.tasktracker.exceptions.InvalidFilterException;
 import com.luzhajka.tasktracker.exceptions.ReadIncomingFileException;
 import com.luzhajka.tasktracker.repository.TaskRepository;
 import com.luzhajka.tasktracker.service.TaskService;
@@ -68,7 +69,6 @@ public class TaskServiceImpl implements TaskService {
         String status = taskFilterRequestDto.getStatus();
 
         List<TaskEntity> taskEntityList;
-
         if (releaseId == null && authorId == null && executorId == null && status == null) {
             taskEntityList = taskRepository.findAll();
         } else if (releaseId == null && authorId == null && executorId == null) {
@@ -79,9 +79,12 @@ public class TaskServiceImpl implements TaskService {
             taskEntityList = taskRepository.findAllByAuthorId(authorId);
         } else if (authorId == null && executorId == null && status == null) {
             taskEntityList = taskRepository.findAllByReleaseId(releaseId);
-        } else {
+        } else if (authorId == null) {
             taskEntityList = taskRepository.findAllByReleaseIdAndExecutorIdAndStatus(releaseId, executorId, status);
+        } else {
+            throw new InvalidFilterException(format(getMessageForLocale("invalid.filter")));
         }
+
 
         return taskEntityList.stream().map(mapper::entityToDto).collect(toList());
     }
@@ -164,7 +167,7 @@ public class TaskServiceImpl implements TaskService {
         }
         for (CSVRecord record : records) {
             CreateTaskDto createTaskDto = new CreateTaskDto.CreateTaskDTOBuilder()
-                    .name("name")
+                    .name(record.get("name"))
                     .description(record.get("description"))
                     .author(Long.valueOf(record.get("author")))
                     .executor(Long.valueOf(record.get("executor")))

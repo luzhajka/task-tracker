@@ -119,7 +119,6 @@ public class UserServiceTest {
         assertTrue(users.isEmpty());
     }
 
-    @DirtiesContext
     @Test
     public void createUserTest() {
 
