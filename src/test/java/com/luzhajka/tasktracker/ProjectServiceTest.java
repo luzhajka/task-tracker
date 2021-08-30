@@ -103,12 +103,8 @@ public class ProjectServiceTest {
     @Test
     public void emptyResultGetProjectTest() {
         Mockito.when(projectRepository.findById(projectId)).thenReturn(empty());
-
-        try {
-            projectService.getProject(projectId);
-        } catch (Exception e) {
-            Assertions.assertEquals("Project by ID = 3434 not found", e.getMessage());
-        }
+        Exception e = Assertions.assertThrows(EntityNotFoundException.class, () -> projectService.getProject(projectId));
+        Assertions.assertEquals("Project by ID = 3434 not found", e.getMessage());
     }
 
     @Test
