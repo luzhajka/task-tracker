@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.UUID;
 
+import static com.luzhajka.tasktracker.utils.MessagesUtil.getMessageForLocale;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -47,8 +48,9 @@ public class ReleaseServiceImpl implements ReleaseService {
         return releaseRepository
                 .findById(releaseId)
                 .map(mapper::entityToDto)
-                .orElseThrow(() -> new javax.persistence.EntityNotFoundException(format("Release by ID = %d not found", releaseId)));
-
+                .orElseThrow(() -> new EntityNotFoundException(
+                        format(getMessageForLocale("release.not.found"), releaseId)
+                ));
     }
 
     @Transactional
@@ -80,7 +82,6 @@ public class ReleaseServiceImpl implements ReleaseService {
         return taskRepository.countAllByReleaseIdAndStatusIsNot(releaseId, TaskStatus.done.name());
     }
 
-
     @Transactional
     @Override
     public Long createRelease(CreateReleaseDto createReleaseDto) {
@@ -93,7 +94,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Override
     public void editRelease(Long releaseId, EditReleaseRequestDto editReleaseRequestDto) {
         ReleaseEntity releaseEntity = releaseRepository.findById(releaseId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Release  by ID = %d not found", releaseId))
+                () -> new EntityNotFoundException(format(getMessageForLocale("release.not.found"), releaseId))
         );
 
         releaseEntity.setVersion(StringUtils.hasText(editReleaseRequestDto.getReleaseVersion())

@@ -11,6 +11,7 @@ import com.luzhajka.tasktracker.controller.dto.TaskStatus;
 import com.luzhajka.tasktracker.entity.TaskEntity;
 import com.luzhajka.tasktracker.exceptions.EmptyRequestException;
 import com.luzhajka.tasktracker.exceptions.EntityNotFoundException;
+import com.luzhajka.tasktracker.exceptions.InvalidFilterException;
 import com.luzhajka.tasktracker.exceptions.ReadIncomingFileException;
 import com.luzhajka.tasktracker.repository.TaskRepository;
 import com.luzhajka.tasktracker.service.TaskService;
@@ -28,6 +29,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
 
+import static com.luzhajka.tasktracker.utils.MessagesUtil.getMessageForLocale;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
@@ -54,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findById(taskId)
                 .map(mapper::entityToDto)
                 .orElseThrow(
-                        () -> new EntityNotFoundException(format("Task by ID = %s not found", taskId))
+                        () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId))
                 );
     }
 
@@ -67,7 +69,6 @@ public class TaskServiceImpl implements TaskService {
         String status = taskFilterRequestDto.getStatus();
 
         List<TaskEntity> taskEntityList;
-
         if (releaseId == null && authorId == null && executorId == null && status == null) {
             taskEntityList = taskRepository.findAll();
         } else if (releaseId == null && authorId == null && executorId == null) {
@@ -77,10 +78,13 @@ public class TaskServiceImpl implements TaskService {
         } else if (releaseId == null && executorId == null && status == null) {
             taskEntityList = taskRepository.findAllByAuthorId(authorId);
         } else if (authorId == null && executorId == null && status == null) {
-            taskEntityList = taskRepository.findAllByRelease(releaseId);
-        } else {
+            taskEntityList = taskRepository.findAllByReleaseId(releaseId);
+        } else if (authorId == null) {
             taskEntityList = taskRepository.findAllByReleaseIdAndExecutorIdAndStatus(releaseId, executorId, status);
+        } else {
+            throw new InvalidFilterException(format(getMessageForLocale("invalid.filter")));
         }
+
 
         return taskEntityList.stream().map(mapper::entityToDto).collect(toList());
     }
@@ -97,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void editTask(UUID taskId, EditTaskRequestDto editTaskDto) {
         TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format("Task by ID = %s not found", taskId))
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId))
         );
 
         taskEntity.setName(hasText(editTaskDto.getName())
@@ -107,44 +111,49 @@ public class TaskServiceImpl implements TaskService {
         taskEntity.setDescription(hasText(editTaskDto.getDescription())
                 ? editTaskDto.getDescription()
                 : taskEntity.getDescription());
+
+        taskRepository.saveAndFlush(taskEntity);
     }
 
 
     @Override
     public void changeExecutor(UUID taskId, ChangeTaskExecutorDto changeTaskExecutorDto) {
         if (changeTaskExecutorDto.getExecutor() == null) {
-            throw new EmptyRequestException("Пустой запрос");
+            throw new EmptyRequestException(getMessageForLocale("empty.request"));
         }
-        taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format("Task by ID = %s not found", taskId)))
-                .setExecutorId(changeTaskExecutorDto.getExecutor());
+        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)));
+        taskEntity.setExecutorId(changeTaskExecutorDto.getExecutor());
+        taskRepository.saveAndFlush(taskEntity);
     }
 
     @Override
     public void changeStatus(UUID taskId, ChangeTaskStatusDto changeTaskStatusDto) {
         if (changeTaskStatusDto.getStatus() == null) {
-            throw new EmptyRequestException("Пустой запрос");
+            throw new EmptyRequestException(getMessageForLocale("empty.request"));
         }
-        taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format("Task by ID = %s not found", taskId))).
-                setStatus(changeTaskStatusDto.getStatus().toString());
+        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)));
+        taskEntity.setStatus(changeTaskStatusDto.getStatus().toString());
+        taskRepository.saveAndFlush(taskEntity);
     }
 
     @Override
     public void changeRelease(UUID taskId, ChangeTaskReleaseDto changeTaskReleaseDto) {
         if (changeTaskReleaseDto.getRelease() == null) {
-            throw new EmptyRequestException("Пустой запрос");
+            throw new EmptyRequestException(getMessageForLocale("empty.request"));
         }
-        taskRepository.findById(taskId).orElseThrow(
-                () -> new EntityNotFoundException(format("Task by ID = %s not found", taskId)))
-                .setReleaseId(changeTaskReleaseDto.getRelease());
+        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), taskId)));
+        taskEntity.setReleaseId(changeTaskReleaseDto.getRelease());
+        taskRepository.saveAndFlush(taskEntity);
     }
 
     @Transactional
     @Override
     public void deleteTask(UUID id) {
         taskRepository.delete(taskRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(format("Tasks by ID = %s not found", id))));
+                () -> new EntityNotFoundException(format(getMessageForLocale("task.not.found"), id))));
     }
 
     public void uploadTasks(@RequestParam MultipartFile file) {
@@ -154,11 +163,11 @@ public class TaskServiceImpl implements TaskService {
                     .withHeader("name", "description", "author", "executor", "status", "release", "project")
                     .parse(new InputStreamReader(file.getInputStream(), UTF_8));
         } catch (Exception e) {
-            throw new ReadIncomingFileException("Не удалось прочитать файл", e);
+            throw new ReadIncomingFileException(getMessageForLocale("file.not.reading"), e);
         }
         for (CSVRecord record : records) {
             CreateTaskDto createTaskDto = new CreateTaskDto.CreateTaskDTOBuilder()
-                    .name("name")
+                    .name(record.get("name"))
                     .description(record.get("description"))
                     .author(Long.valueOf(record.get("author")))
                     .executor(Long.valueOf(record.get("executor")))

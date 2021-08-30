@@ -10,7 +10,7 @@ public class EditTaskRequestDto {
     private String description;
 
 
-    public EditTaskRequestDto(String name, String description, String statusTask, Long executorId, Long releaseId) {
+    public EditTaskRequestDto(String name, String description) {
         this.name = name;
         this.description = description;
     }

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.luzhajka.tasktracker.utils.MessagesUtil.getMessageForLocale;
 import static java.lang.String.format;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -51,8 +52,10 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(mapper::entityToDto)
                 .orElseThrow(
                         () -> {
-                            LOGGER.error(format("Project by ID = %d not found", projectId));
-                            return new EntityNotFoundException("Project not found");
+                            LOGGER.error(format(getMessageForLocale("project.not.found"), projectId));
+                            return new EntityNotFoundException(
+                                    format(getMessageForLocale("project.not.found"), projectId)
+                            );
                         }
                 );
     }
@@ -71,7 +74,9 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
                 () -> {
                     LOGGER.error(format("Project by ID = %d not found", projectId));
-                    return new EntityNotFoundException("Project not found");
+                    return new EntityNotFoundException(
+                            format(getMessageForLocale("project.not.found"), projectId)
+                    );
                 }
         );
 
@@ -97,26 +102,31 @@ public class ProjectServiceImpl implements ProjectService {
         if (openedTasks.isEmpty()) {
             ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
                     () -> {
-                        LOGGER.error(format("Project by ID = %d not found", projectId));
-                        return new EntityNotFoundException("Project not found");
+                        LOGGER.error(format(getMessageForLocale("project.not.found"), projectId));
+                        return new EntityNotFoundException(
+                                format(getMessageForLocale("project.not.found"), projectId)
+                        );
                     }
             );
             projectEntity.setStatus(ProjectStatus.DONE.name());
+            projectRepository.saveAndFlush(projectEntity);
             return;
         }
-        throw new InvalidProjectStateException("На проекте остались незавершенные задачи");
+        throw new InvalidProjectStateException(getMessageForLocale("invalid.project.state"));
     }
 
     @Override
     public void startProject(Long projectId) {
         List<PaymentDto> projectPayment = client.getProjectPayment(projectId);
-        if (projectPayment.isEmpty()){
-            throw new PaymentNotFoundException(String.format("для проекта %d платежи не найдены", projectId));
+        if (projectPayment.isEmpty()) {
+            throw new PaymentNotFoundException(format(getMessageForLocale("payment.not.found"), projectId));
         }
         ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(
                 () -> {
-                    LOGGER.error(format("Project by ID = %d not found", projectId));
-                    return new EntityNotFoundException("Project not found");
+                    LOGGER.error(format(getMessageForLocale("project.not.found"), projectId));
+                    return new EntityNotFoundException(
+                            format(getMessageForLocale("project.not.found"), projectId)
+                    );
                 }
         );
         projectEntity.setStatus(ProjectStatus.IN_PROGRESS.name());

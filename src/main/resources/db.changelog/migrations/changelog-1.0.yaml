@@ -1,0 +1,183 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 0001-create-table-users
+      author: olga-smirnova-luzhajka
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user_id
+              - column:
+                  name: name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0002-create-table-projects
+      author: olga-smirnova-luzhajka
+      changes:
+        - createTable:
+            tableName: projects
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_project_id
+              - column:
+                  name: name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_client
+                    references: users(id)
+
+  - changeSet:
+      id: 0003-create-table-releases
+      author: olga-smirnova-luzhajka
+      changes:
+        - createTable:
+            tableName: releases
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_release_id
+              - column:
+                  name: virsion
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: startDate
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: endDate
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: project
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0004-create-table-tasks
+      author: olga-smirnova-luzhajka
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_task_id
+              - column:
+                  name: name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(250)
+              - column:
+                  name: author
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_author
+                    references: users(id)
+              - column:
+                  name: executor
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_executor
+                    references: users(id)
+              - column:
+                  name: status
+                  type: VARCHAR(30)
+              - column:
+                  name: release
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_release
+                    references: releases(id)
+              - column:
+                  name: project
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_project
+                    references: projects(id)
+
+
+  - changeSet:
+      id: 0005-add-comments-project
+      author: olga-smirnova-luzhajka
+      changes:
+        - sql:
+            dbms: postgresql
+            stripComments: true
+            sql: comment on table projects is 'Таблица хранения проектов';
+
+
+
+  - changeSet:
+      id: addColumns-user
+      author: olga-smirnova-luzhajka
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: login
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: password
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: permissionRole
+                  type: varchar(50)
+                  constraints:
+                    nullable: false

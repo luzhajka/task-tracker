@@ -6,9 +6,13 @@ public class TaskFilterRequestDto {
     @Schema(description = "ID релиза")
     private Long releaseId;
 
-    @Schema(description = "ID проекта")
+    @Schema(description = "ID автора проекта")
     private Long authorId;
+
+    @Schema(description = "ID исполнителя проекта")
     private Long executorId;
+
+    @Schema(description = "Статус проекта")
     private String status;
 
     public TaskFilterRequestDto(Long releaseId, Long authorId, Long executorId, String status) {

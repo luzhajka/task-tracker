@@ -16,20 +16,20 @@ public class CreateReleaseDto {
     private LocalDate endRelease;
 
     @Schema(description = "Проект, которому принадлежит релиз")
-    private ProjectDto project;
+    private Long projectId;
 
-    public CreateReleaseDto(String version, LocalDate startRelease, LocalDate endRelease, ProjectDto project) {
+    public CreateReleaseDto(String version, LocalDate startRelease, LocalDate endRelease, Long projectId) {
         this.version = version;
         this.startRelease = startRelease;
         this.endRelease = endRelease;
-        this.project = project;
+        this.projectId = projectId;
     }
 
     public static class CreateReleaseDtoBuilder {
         private String version;
         private LocalDate startRelease;
         private LocalDate endRelease;
-        private ProjectDto project;
+        private Long projectId;
 
 
         public CreateReleaseDtoBuilder version(String version) {
@@ -47,13 +47,13 @@ public class CreateReleaseDto {
             return this;
         }
 
-        private CreateReleaseDtoBuilder project(ProjectDto project) {
-            this.project = project;
+        private CreateReleaseDtoBuilder project(Long projectId) {
+            this.projectId = projectId;
             return this;
         }
 
         public CreateReleaseDto build() {
-            return new CreateReleaseDto(version, startRelease, endRelease, project);
+            return new CreateReleaseDto(version, startRelease, endRelease, projectId);
         }
     }
 
@@ -70,10 +70,6 @@ public class CreateReleaseDto {
         return endRelease;
     }
 
-    public ProjectDto getProject() {
-        return project;
-    }
-
     public void setVersion(String version) {
         this.version = version;
     }
@@ -86,8 +82,12 @@ public class CreateReleaseDto {
         this.endRelease = endRelease;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
 }
